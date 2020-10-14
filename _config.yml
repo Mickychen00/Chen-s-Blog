@@ -9,6 +9,7 @@ plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-paginate
+ 
 
 paginate: 10
 
