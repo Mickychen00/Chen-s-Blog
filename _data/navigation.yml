@@ -6,6 +6,8 @@
   url: /categories/
 - title: Tags
   url: /tags/
+- title: Donate
+  url: /donate/
 - title: More
   sublinks:
     - title: FAQ
