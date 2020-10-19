@@ -87,6 +87,7 @@ plants_counts.reset_index(inplace=True)
 plants_counts.head()
 ```
 显示的结果应该为：
+
 |   | index | NAME |
 |:---:| :---: | :---: |
 | 0 | 内蒙古 | 295  |
@@ -94,6 +95,7 @@ plants_counts.head()
 |2|云南|212|
 |3|山东|159|
 |4|新疆|148|
+
 
 ``` python
 plants_counts.rename(columns = {'index':'name','NAME':'plants_num'},inplace=True) #这里改一下列名
