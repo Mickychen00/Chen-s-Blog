@@ -4,4 +4,4 @@ title: About
 permalink: /about/
 ---
 
-Another minimal style of Jekyll theme for writers.
+桐高凤必至，花香蝶自来

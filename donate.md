@@ -5,4 +5,4 @@ title: Donate
 permalink: /donate/
 ---
 
-Donate to our site
+![向我捐赠](/assets/Alipay.jpg)
