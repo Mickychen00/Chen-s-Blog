@@ -32,7 +32,7 @@ head集数据包含了省份名称和最重要的geometry列数据
 ``` python
 pwplant = pd.read_csv('/users/chen/Onedrive/Economic data/global_power_plant_database.csv')
 pw_china = pwplant[pwplant.country_long=='China'] #选出中国数据
-point_with_cap = pw_china['latitude','longitude','capacity_mw'] #读取其中的经纬度和容量数据
+point_with_cap = pw_china[['latitude','longitude','capacity_mw']] #读取其中的经纬度和容量数据
 point_withcap.reset_index(inplace=True,drop=True)
 point = point_with_cap.apply(lambda row: Point(row.longitude,row.latitude),axis=1) #以列为方向，使用shapely的Point类将经纬度转换为point点
 powerplants = gpd.GeoDataFrame(point_with_cap,geometry = point) #直到此处才转为Geopandas数据集
@@ -103,7 +103,7 @@ plants_counts.rename(columns = {'index':'name','NAME':'plants_num'},inplace=True
 至此为止，合并数据集已经发挥了它的全部使命，即将电厂与省份匹配然后计算每一省份的电厂数量。
 接下来，需要的是将统计好的数量数据与原有 **pro** 对象合并
 ``` python
-pro = pd.merge(pro,plants_counts,left_on='NAME',right_on='name').drop('name',axis=1) #此处的pandas数据合并值得铭记
+pro = pd.merge(pro,plants_counts,left_on='NAME',right_on='name',how='outer').drop('name',axis=1) #此处的pandas数据合并值得铭记，这里不加how声明，将会漏掉我国台湾省地区
 pro.head() 
 type(pro) #这里的pro依然还是geopandas数据，尽管经历了pandas的处理，这也说明二者的同源性
 ```
