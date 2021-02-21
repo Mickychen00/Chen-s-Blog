@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Multiprocessing学习笔记
+toc: true
 author: Chen Huang
 tags: [并行, multiprocess,python]
 categories: python
