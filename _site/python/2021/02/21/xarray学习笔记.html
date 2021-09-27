@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>xarray学习笔记 | Chen Huang’ Blog</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="xarray学习笔记" />
+<meta name="author" content="Chen Huang" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="xarray 用法 类似软件Iris xarray: N-D labeled arrays and datasets in Python" />
+<meta property="og:description" content="xarray 用法 类似软件Iris xarray: N-D labeled arrays and datasets in Python" />
+<meta property="og:site_name" content="Chen Huang’ Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-02-21T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="xarray学习笔记" />
+<meta name="twitter:site" content="@ChenHuangPolicy" />
+<meta name="twitter:creator" content="@Chen Huang" />
+<script type="application/ld+json">
+{"url":"/python/2021/02/21/xarray%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html","mainEntityOfPage":{"@type":"WebPage","@id":"/python/2021/02/21/xarray%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html"},"author":{"@type":"Person","name":"Chen Huang"},"datePublished":"2021-02-21T00:00:00+08:00","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Chen Huang"},"description":"xarray 用法 类似软件Iris xarray: N-D labeled arrays and datasets in Python","headline":"xarray学习笔记","dateModified":"2021-02-21T00:00:00+08:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chen Huang&apos; Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+<!-- End selecting skin -->
+
+<script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+
+
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="far fa-user"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Chen Huang&#39; Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/years/">Years</a></li>
+            
+              <li><a class="" href="/categories/">Categories</a></li>
+            
+              <li><a class="" href="/tags/">Tags</a></li>
+            
+              <li><a class="" href="/donate/">Donate</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/faq/">FAQ</a>
+                    <a class="" href="/docs/">Docs</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <h3 class="toc-title">Table of Contents</h3>
+<nav class="toc-nav">
+  <ul class="toc">
+  <li><a href="#xarray-n-d-labeled-arrays-and-datasets-in-python">xarray: N-D labeled arrays and datasets in Python</a></li>
+  <li><a href="#why-xarray">Why xarray?</a>
+    <ul>
+      <li><a href="#what-labels-enable">What labels enable</a></li>
+      <li><a href="#core-data-structures">Core data structures</a></li>
+    </ul>
+  </li>
+  <li><a href="#quick-overview">Quick overview</a>
+    <ul>
+      <li><a href="#create-dataarray">Create DataArray</a></li>
+      <li><a href="#indexing">Indexing</a></li>
+      <li><a href="#attributes">Attributes</a></li>
+      <li><a href="#computation">Computation</a></li>
+      <li><a href="#groupby">Groupby</a></li>
+      <li><a href="#plotting">Plotting</a></li>
+      <li><a href="#pandas">pandas</a></li>
+      <li><a href="#datasets">Datasets</a></li>
+      <li><a href="#read-write-netcdf-files">Read&amp; write netCDF files</a></li>
+    </ul>
+  </li>
+  <li><a href="#terminology">Terminology</a>
+    <ul>
+      <li><a href="#dataarray">DataArray</a></li>
+      <li><a href="#dataset">Dataset</a></li>
+      <li><a href="#variable">Variable</a></li>
+      <li><a href="#dimension">Dimension</a></li>
+      <li><a href="#coordinate">Coordinate</a></li>
+      <li><a href="#dimension-coordinate">Dimension coordinate</a></li>
+      <li><a href="#index">Index</a></li>
+      <li><a href="#name">name</a></li>
+      <li><a href="#scalar">scalar</a></li>
+      <li><a href="#duck-array">duck array</a></li>
+    </ul>
+  </li>
+  <li><a href="#data-structures">Data structures</a>
+    <ul>
+      <li><a href="#dataarray-1">DataArray</a></li>
+      <li><a href="#dataset-1">Dataset</a></li>
+      <li><a href="#coordinates">Coordinates</a></li>
+    </ul>
+  </li>
+  <li><a href="#indexing-and-selecting-data">Indexing and selecting data</a>
+    <ul>
+      <li><a href="#positional-indexing">Positional indexing</a></li>
+      <li><a href="#indexing-with-dimension-names">Indexing with dimension names</a></li>
+      <li><a href="#nearest-neighbor-lookups">Nearest neighbor lookups</a></li>
+      <li><a href="#dataset-indexing">Dataset indexing</a></li>
+      <li><a href="#dropping-labels-and-dimensions">Dropping labels and dimensions</a></li>
+      <li><a href="#masking-with-where">Masking with where</a></li>
+      <li><a href="#selecting-values-with-isin">Selecting values with isin</a></li>
+      <li><a href="#vectorized-indexing-比较难的一节">Vectorized Indexing (比较难的一节)</a></li>
+      <li><a href="#assigning-values-with-indexing">Assigning values with indexing</a></li>
+      <li><a href="#more-advanced-indexing">More advanced indexing</a></li>
+      <li><a href="#align-and-reindex">Align and reindex</a></li>
+      <li><a href="#missing-coordinate-labels">Missing coordinate labels</a></li>
+      <li><a href="#underlying-indexes">Underlying Indexes</a></li>
+      <li><a href="#coples-vs-views">Coples vs. Views</a></li>
+      <li><a href="#multi-level-indexing">Multi-level indexing</a></li>
+      <li><a href="#indexing-rules">Indexing rules</a></li>
+    </ul>
+  </li>
+  <li><a href="#interpolating-data">Interpolating data</a>
+    <ul>
+      <li><a href="#scalar-and-1-dimensional-interpolation">Scalar and 1-dimensional interpolation</a></li>
+      <li><a href="#interpolation-methods">Interpolation methods</a></li>
+      <li><a href="#advanced-interpolation">Advanced Interpolation</a></li>
+      <li><a href="#interpolating-arrays-with-nan">Interpolating arrays with Nan</a></li>
+      <li><a href="#example">Example</a></li>
+    </ul>
+  </li>
+  <li><a href="#computation-1">Computation</a>
+    <ul>
+      <li><a href="#basic-array-math">Basic array math</a></li>
+      <li><a href="#misssing-values">Misssing values</a></li>
+      <li><a href="#aggregation">Aggregation</a></li>
+      <li><a href="#rolling-window-operations">Rolling window operations</a></li>
+      <li><a href="#weighted-array-reductions">Weighted array reductions</a></li>
+      <li><a href="#coarsen-large-arrays">Coarsen large arrays</a></li>
+      <li><a href="#computation-using-coordinates">Computation using Coordinates</a></li>
+      <li><a href="#fitting-polynomials">Fitting polynomials</a></li>
+      <li><a href="#broadcasting-by-dimension-name">Broadcasting by dimension name</a></li>
+      <li><a href="#automatic-alignment">Automatic alignment</a></li>
+      <li><a href="#coordinates-1">Coordinates</a></li>
+      <li><a href="#math-with-datasets">Math with datasets</a></li>
+      <li><a href="#wrapping-custon-computation">Wrapping custon computation</a></li>
+    </ul>
+  </li>
+  <li><a href="#groupby-split-apply-combine">Groupby: Split-apply-combine</a></li>
+  <li><a href="#reshaping-and-reorganizing-data">Reshaping and reorganizing data</a></li>
+  <li><a href="#combining-data">Combining data</a></li>
+  <li><a href="#time-series-data">Time series data</a></li>
+  <li><a href="#weather-and-climate-data">Weather and climate data</a></li>
+  <li><a href="#working-with-pandas">Working with pandas</a></li>
+  <li><a href="#reading-and-writing-file">Reading and writing file</a></li>
+  <li><a href="#parallel-computing-with-dask">Parallel computing with Dask</a></li>
+  <li><a href="#plotting-1">Plotting</a></li>
+  <li><a href="#working-with-numpy-like-arrays">Working with numpy-like arrays</a></li>
+  <li><a href="#basic-xarray-notebook">Basic xarray notebook</a>
+    <ul>
+      <li><a href="#reading-data-and-associated-metadata-from-a-netcdf-file-into-an-xarray-dataset">Reading data and associated metadata from a netCDF file into an xarray dataset</a></li>
+      <li><a href="#subsetting-a-dataset-by-time-and-space-slicing-and-dicing">Subsetting a dataset by time and space （Slicing and Dicing）</a></li>
+      <li><a href="#plotting-with-xarray">Plotting with xarray</a></li>
+      <li><a href="#calculating-metrics-eg-mean-maximum">Calculating metrics, e.g. mean, maximum</a></li>
+      <li><a href="#grouping-and-resampling-in-time">Grouping and resampling in time</a></li>
+      <li><a href="#masking">Masking</a></li>
+      <li><a href="#opening-multiple-files-as-a-single-dataset">Opening multiple files as a single dataset</a></li>
+    </ul>
+  </li>
+</ul>
+
+</nav>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">xarray学习笔记</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2021-02-21T00:00:00+08:00" itemprop="datePublished">
+        Feb 21, 2021
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Chen Huang</span></span></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h1 id="xarray-用法">xarray 用法</h1>
+<p>类似软件<a href="https://scitools-iris.readthedocs.io/en/latest/index.html">Iris</a></p>
+<h2 id="xarray-n-d-labeled-arrays-and-datasets-in-python">xarray: N-D labeled arrays and datasets in Python</h2>
+
+<p><strong>xarray</strong> (formerly <strong>xray</strong>) is an open source project and Python package that makes working with labelled multi-dimensional arrays simple, efficient, and fun!</p>
+
+<p>Xarray introduces labels in the form of <strong>dimensions, coordinates and attributes（维度、坐标和属性）</strong> on top of raw <a href="http://www.numpy.org/">NumPy</a>-like arrays, which allows for a more intuitive, more concise, and less error-prone developer experience. The package includes a large and growing library of domain-agnostic functions for advanced analytics and visualization with these data structures.</p>
+
+<p>Xarray is inspired by and borrows heavily from <a href="http://pandas.pydata.org/">pandas</a>, the popular data analysis package focused on labelled tabular data. It is particularly tailored to working with <a href="http://www.unidata.ucar.edu/software/netcdf">netCDF</a> files, which were the source of xarray’s data model, and integrates tightly with <a href="http://dask.org/">dask</a> for parallel computing.</p>
+
+<h2 id="why-xarray">Why xarray?</h2>
+<h3 id="what-labels-enable">What labels enable</h3>
+<p>Multi-dimensional (a.k.a. N-dimensional, ND) arrays (sometimes called <strong>“tensors”（张量）</strong>) are an essential part of computational science. They are encountered in a wide range of fields, including physics, astronomy, geoscience, bioinformatics, engineering, finance, and deep learning. In Python, <a href="https://www.numpy.org/">NumPy</a> provides the fundamental data structure and API for working with raw ND arrays. <strong>However, real-world datasets are usually more than just raw numbers; they have labels which encode information about how the array values map to locations in space, time, etc.</strong></p>
+
+<p>Xarray doesn’t just keep track of labels on arrays – it uses them to provide a powerful and concise interface. For example:</p>
+
+<ul>
+  <li>Apply operations over dimensions by name: <code class="language-plaintext highlighter-rouge">x.sum('time')</code>.</li>
+  <li>Select values by label instead of integer location: <code class="language-plaintext highlighter-rouge">x.loc['2014-01-01']</code> or <code class="language-plaintext highlighter-rouge">x.sel(time='2014-01-01')</code>.</li>
+  <li>Mathematical operations (e.g., <code class="language-plaintext highlighter-rouge">x - y</code>) vectorize across multiple dimensions (array broadcasting) based on dimension names, not shape.</li>
+  <li>Flexible split-apply-combine operations with groupby: <code class="language-plaintext highlighter-rouge">x.groupby('time.dayofyear').mean()</code>.</li>
+  <li>Database like alignment based on coordinate labels that smoothly handles missing values: <code class="language-plaintext highlighter-rouge">x, y = xr.align(x, y, join='outer')</code>.</li>
+  <li>Keep track of arbitrary metadata in the form of a Python dictionary: <code class="language-plaintext highlighter-rouge">x.attrs</code>.</li>
+</ul>
+
+<p>The N-dimensional nature of xarray’s data structures makes it suitable for dealing with multi-dimensional scientific data, and its use of dimension names instead of axis labels (<code class="language-plaintext highlighter-rouge">dim='time'</code> instead of <code class="language-plaintext highlighter-rouge">axis=0</code>) makes such arrays much more manageable than the raw numpy ndarray: with xarray, you don’t need to keep track of the order of an array’s dimensions or insert dummy dimensions of size 1 to align arrays (e.g., using <code class="language-plaintext highlighter-rouge">np.newaxis</code>).</p>
+
+<h3 id="core-data-structures">Core data structures</h3>
+<p><a href="http://xarray.pydata.org/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="xarray.DataArray"><code class="language-plaintext highlighter-rouge">DataArray</code></a> is our implementation of a labeled, N-dimensional array. It is an N-D generalization of a <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v1.1.4)"><code class="language-plaintext highlighter-rouge">pandas.Series</code></a>. The name <code class="language-plaintext highlighter-rouge">DataArray</code> itself is borrowed from Fernando Perez’s <a href="https://github.com/fperez/datarray">datarray</a> project, which prototyped a similar data structure.</p>
+
+<p><a href="http://xarray.pydata.org/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="xarray.Dataset"><code class="language-plaintext highlighter-rouge">Dataset</code></a> is a multi-dimensional, in-memory array database. It is a dict-like container of <code class="language-plaintext highlighter-rouge">DataArray</code> objects aligned along any number of shared dimensions, and serves a similar purpose in xarray to the <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.1.4)"><code class="language-plaintext highlighter-rouge">pandas.DataFrame</code></a>.</p>
+
+<h2 id="quick-overview">Quick overview</h2>
+<h3 id="create-dataarray">Create DataArray</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="n">xr</span>
+<span class="n">data</span><span class="o">=</span> <span class="n">xr</span><span class="p">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span><span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s">'x'</span><span class="p">,</span><span class="s">'y'</span><span class="p">),</span><span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s">'x'</span><span class="p">:[</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">]})</span>
+<span class="n">data</span><span class="p">.</span><span class="n">values</span>
+<span class="n">data</span><span class="p">.</span><span class="n">dims</span>
+<span class="n">data</span><span class="p">.</span><span class="n">coords</span>
+<span class="n">data</span><span class="p">.</span><span class="n">attrs</span>
+</code></pre></div></div>
+<h3 id="indexing">Indexing</h3>
+<p>xarray supports four kinds of indexing.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span>
+<span class="n">data</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+<span class="n">data</span><span class="p">.</span><span class="n">isel</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">data</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Unlike positional indexing, label-based indexing frees us from having to know how our array is organized. All we need to know are the dimension name and the label we wish to index i.e. <code class="language-plaintext highlighter-rouge">data.sel(x=10)</code> works regardless of whether <code class="language-plaintext highlighter-rouge">x</code> is the first or second dimension of the array and regardless of whether <code class="language-plaintext highlighter-rouge">10</code> is the first or second element of <code class="language-plaintext highlighter-rouge">x</code>. We have already told xarray that x is the first dimension when we created <code class="language-plaintext highlighter-rouge">data</code>: xarray keeps track of this so we don’t have to.</p>
+
+<h3 id="attributes">Attributes</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">.</span><span class="n">attrs</span><span class="p">[</span><span class="s">"long_name"</span><span class="p">]</span> <span class="o">=</span> <span class="s">"random velocity"</span>
+
+<span class="n">data</span><span class="p">.</span><span class="n">attrs</span><span class="p">[</span><span class="s">"units"</span><span class="p">]</span> <span class="o">=</span> <span class="s">"metres/sec"</span>
+
+<span class="n">data</span><span class="p">.</span><span class="n">attrs</span><span class="p">[</span><span class="s">"description"</span><span class="p">]</span> <span class="o">=</span> <span class="s">"A random variable created as an example."</span>
+
+<span class="n">data</span><span class="p">.</span><span class="n">attrs</span><span class="p">[</span><span class="s">"random_attribute"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">123</span>
+<span class="n">data</span><span class="p">.</span><span class="n">attrs</span>
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">attrs</code> is just a Python dictionary, so you can assign anything you wish.</p>
+
+<h3 id="computation">Computation</h3>
+<p>Data arrays work very similarly to numpy ndarrays:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="o">+</span><span class="mi">10</span>
+<span class="n">np</span><span class="p">.</span><span class="n">sin</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">data</span><span class="p">.</span><span class="n">T</span>
+<span class="n">data</span><span class="p">.</span><span class="nb">sum</span><span class="p">()</span>
+</code></pre></div></div>
+<p>However, aggregation operations can use dimension names instead of axis numbers:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s">'x'</span><span class="p">)</span> <span class="c1">#x是维度之一
+</span></code></pre></div></div>
+<p>Arithmetic operations broadcast based on <strong>dimension name</strong>. This means you don’t need to insert dummy dimensions for alignment:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">a</span> <span class="o">=</span> <span class="n">xr</span><span class="p">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">),[</span><span class="n">data</span><span class="p">.</span><span class="n">coords</span><span class="p">[</span><span class="s">'y'</span><span class="p">]])</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">xr</span><span class="p">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="n">dims</span><span class="o">=</span><span class="s">'z'</span><span class="p">)</span>
+<span class="n">a</span><span class="o">+</span><span class="n">b</span>
+<span class="o">&lt;</span><span class="n">xarray</span><span class="p">.</span><span class="n">DataArray</span> <span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="mi">4</span><span class="p">)</span><span class="o">&gt;</span>
+<span class="n">array</span><span class="p">(</span>\<span class="p">[</span>\<span class="p">[</span><span class="o">-</span><span class="mf">0.63456326</span><span class="p">,</span>  <span class="mf">0.03405836</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.75318703</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.93960659</span>\<span class="p">],</span>
+ \<span class="p">[</span><span class="o">-</span><span class="mf">0.4622225</span> <span class="p">,</span>  <span class="mf">0.20639913</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.58084626</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.76726583</span>\<span class="p">],</span>
+ \<span class="p">[</span><span class="o">-</span><span class="mf">2.7542705</span> <span class="p">,</span> <span class="o">-</span><span class="mf">2.08564887</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.87289427</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.05931383</span>\<span class="p">]</span>\<span class="p">])</span>
+<span class="n">Coordinates</span><span class="p">:</span>
+ \<span class="o">*</span> <span class="n">y</span>        <span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="n">int64</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span>
+<span class="n">Dimensions</span> <span class="n">without</span> <span class="n">coordinates</span><span class="p">:</span> <span class="n">z</span>
+</code></pre></div></div>
+<p>甚至大多数情况下可以不考虑维度的形状</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="o">-</span> <span class="n">data</span><span class="p">.</span><span class="n">T</span>
+</code></pre></div></div>
+
+<h3 id="groupby">Groupby</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">labels</span> <span class="o">=</span> <span class="n">xr</span><span class="p">.</span><span class="n">DataArray</span><span class="p">([</span><span class="s">'E'</span><span class="p">,</span><span class="s">'F'</span><span class="p">,</span><span class="s">'E'</span><span class="p">],[</span><span class="n">data</span><span class="p">.</span><span class="n">coords</span><span class="p">[</span><span class="s">'y'</span><span class="p">]],</span><span class="n">name</span><span class="o">=</span><span class="s">'labels'</span><span class="p">)</span>
+<span class="n">data</span><span class="p">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">labels</span><span class="p">).</span><span class="n">mean</span><span class="p">(</span><span class="s">'y'</span><span class="p">)</span> <span class="c1">#以EF为归类方式，列间（y列维度）取平均
+</span><span class="n">data</span><span class="p">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">labels</span><span class="p">).</span><span class="n">mean</span><span class="p">(</span><span class="s">'x'</span><span class="p">)</span> <span class="c1">#以EF为归类方式，行间（x行维度）取平均 
+</span></code></pre></div></div>
+<h3 id="plotting">Plotting</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span><span class="p">.</span><span class="n">plot</span><span class="p">()</span>
+</code></pre></div></div>
+<h3 id="pandas">pandas</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">series</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="n">to_series</span><span class="p">()</span>
+<span class="n">series</span>
+<span class="n">series</span><span class="p">.</span><span class="n">to_xarray</span><span class="p">()</span>
+</code></pre></div></div>
+<h3 id="datasets">Datasets</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="p">.</span><span class="n">Dataset</span><span class="p">({</span><span class="s">'foo'</span><span class="p">:</span><span class="n">data</span><span class="p">,</span><span class="s">'bar'</span><span class="p">:(</span><span class="s">'x'</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]),</span><span class="s">'barz'</span><span class="p">:</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">})</span>
+<span class="n">ds</span> <span class="c1">#一个包含三个DataArray的Dataset
+</span><span class="n">ds</span><span class="p">.</span><span class="n">foo</span> <span class="c1">#两种提取维度/坐标数据的方式
+</span><span class="n">ds</span><span class="p">[</span><span class="s">'foo'</span><span class="p">]</span>
+</code></pre></div></div>
+<p>Variables in datasets can have different <code class="language-plaintext highlighter-rouge">dtype</code> and even different dimensions, but all dimensions are assumed to refer to points in the same shared coordinate system i.e. if two variables have dimension <code class="language-plaintext highlighter-rouge">x</code>, that dimension must be identical in both variables.
+foo和bar都含有x这一个坐标系，二者的这一坐标系必须一致</p>
+<h3 id="read-write-netcdf-files">Read&amp; write netCDF files</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ds</span><span class="p">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="s">'example.nc'</span><span class="p">)</span>
+<span class="n">xr</span><span class="p">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="s">'example.nc'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="terminology">Terminology</h2>
+<h3 id="dataarray">DataArray</h3>
+<p>A multi-dimensional array with labeled or named dimensions. <code class="language-plaintext highlighter-rouge">DataArray</code> objects add metadata such as dimension names, coordinates, and attributes (defined below) to underlying “unlabeled” data structures such as numpy and Dask arrays. If its optional <code class="language-plaintext highlighter-rouge">name</code> property is set, it is a <em>named DataArray</em>.</p>
+<h3 id="dataset">Dataset</h3>
+<p>A dict-like collection of <code class="language-plaintext highlighter-rouge">DataArray</code> objects with aligned dimensions. Thus, most operations that can be performed on the dimensions of a single <code class="language-plaintext highlighter-rouge">DataArray</code> can be performed on a dataset. Datasets have data variables (see <strong>Variable</strong> below), dimensions, coordinates, and attributes.</p>
+<h3 id="variable">Variable</h3>
+<p>A <a href="https://www.unidata.ucar.edu/software/netcdf/docs/netcdf_data_set_components.html#variables">NetCDF-like variable</a> consisting of dimensions, data, and attributes which describe a single array. The main functional difference between variables and numpy arrays is that numerical operations on variables implement array broadcasting by dimension name. Each <code class="language-plaintext highlighter-rouge">DataArray</code> has an underlying variable that can be accessed via <code class="language-plaintext highlighter-rouge">arr.variable</code>. However, a variable is not fully described outside of either a <code class="language-plaintext highlighter-rouge">Dataset</code> or a <code class="language-plaintext highlighter-rouge">DataArray</code>.</p>
+<h3 id="dimension">Dimension</h3>
+<p>In mathematics, the <em>dimension</em> of data is loosely the number of degrees of freedom for it. A <em>dimension axis</em> is a set of all points in which all but one of these degrees of freedom is fixed. We can think of each dimension axis as having a name, for example the “x dimension”. In xarray, a <code class="language-plaintext highlighter-rouge">DataArray</code> object’s <em>dimensions</em> are its named dimension axes, and the name of the <code class="language-plaintext highlighter-rouge">i</code>-th dimension is <code class="language-plaintext highlighter-rouge">arr.dims[i]</code>. If an array is created without dimension names, the default dimension names are <code class="language-plaintext highlighter-rouge">dim_0</code>, <code class="language-plaintext highlighter-rouge">dim_1</code>, and so forth.
+维度、自由度</p>
+<h3 id="coordinate">Coordinate</h3>
+<p>An array that labels a dimension or set of dimensions of another <code class="language-plaintext highlighter-rouge">DataArray</code>. In the usual one-dimensional case, the coordinate array’s values can loosely be thought of as tick labels along a dimension. There are two types of coordinate arrays: <em>dimension coordinates</em> and <em>non-dimension coordinates</em> (see below). A coordinate named <code class="language-plaintext highlighter-rouge">x</code> can be retrieved from <code class="language-plaintext highlighter-rouge">arr.coords[x]</code>. A <code class="language-plaintext highlighter-rouge">DataArray</code> can have more coordinates than dimensions because a single dimension can be labeled by multiple coordinate arrays. However, only one coordinate array can be a assigned as a particular dimension’s dimension coordinate array. As a consequence, <code class="language-plaintext highlighter-rouge">len(arr.dims) &lt;= len(arr.coords)</code> in general.</p>
+
+<h3 id="dimension-coordinate">Dimension coordinate</h3>
+<p>A one-dimensional coordinate array assigned to <code class="language-plaintext highlighter-rouge">arr</code> with both a name and dimension name in <code class="language-plaintext highlighter-rouge">arr.dims</code>. Dimension coordinates are used for label-based indexing and alignment, like the index found on a <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.1.4)"><code class="language-plaintext highlighter-rouge">pandas.DataFrame</code></a> or <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v1.1.4)"><code class="language-plaintext highlighter-rouge">pandas.Series</code></a>. In fact, dimension coordinates use <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html#pandas.Index" title="(in pandas v1.1.4)"><code class="language-plaintext highlighter-rouge">pandas.Index</code></a> objects under the hood for efficient computation. Dimension coordinates are marked by <code class="language-plaintext highlighter-rouge">*</code> when printing a <code class="language-plaintext highlighter-rouge">DataArray</code> or <code class="language-plaintext highlighter-rouge">Dataset</code>.
+与pandas.Index类似</p>
+
+<h4 id="non-dimension-coordinate">Non-dimension coordinate</h4>
+<p>A coordinate array assigned to <code class="language-plaintext highlighter-rouge">arr</code> with a name in <code class="language-plaintext highlighter-rouge">arr.coords</code> but <em>not</em> in <code class="language-plaintext highlighter-rouge">arr.dims</code>. These coordinates arrays can be one-dimensional or multidimensional, and they are useful for auxiliary labeling. As an example, multidimensional coordinates are often used in geoscience datasets when <a href="http://xarray.pydata.org/en/stable/examples/multidimensional-coords.html">the data’s physical coordinates (such as latitude and longitude) differ from their logical coordinates</a>. However, non-dimension coordinates are not indexed, and any operation on non-dimension coordinates that leverages indexing will fail. Printing <code class="language-plaintext highlighter-rouge">arr.coords</code> will print all of <code class="language-plaintext highlighter-rouge">arr</code>’s coordinate names, with the corresponding dimension(s) in parentheses. For example, <code class="language-plaintext highlighter-rouge">coord_name (dim_name) 1 2 3 ...</code>.</p>
+<h3 id="index">Index</h3>
+<p>An <em>index</em> is a data structure optimized for efficient selecting and slicing of an associated array. Xarray creates indexes for dimension coordinates so that operations along dimensions are fast, while non-dimension coordinates are not indexed. Under the hood, indexes are implemented as <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Index.html#pandas.Index" title="(in pandas v1.1.4)"><code class="language-plaintext highlighter-rouge">pandas.Index</code></a> objects. The index associated with dimension name <code class="language-plaintext highlighter-rouge">x</code> can be retrieved by <code class="language-plaintext highlighter-rouge">arr.indexes[x]</code>. By construction, <code class="language-plaintext highlighter-rouge">len(arr.dims) == len(arr.indexes)</code></p>
+
+<h3 id="name">name</h3>
+<p>The names of dimensions, coordinates, DataArray objects and data variables can be anything as long as they are <a href="https://docs.python.org/3/glossary.html#term-hashable" title="(in Python v3.9)">hashable</a>. However, it is preferred to use <a href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="language-plaintext highlighter-rouge">str</code></a> typed names.
+任意，只要hashable</p>
+<h3 id="scalar">scalar</h3>
+<p>By definition, a scalar is not an <a href="https://numpy.org/doc/stable/glossary.html#term-array" title="(in NumPy v1.19)">array</a> and when converted to one, it has 0 dimensions. That means that, e.g., <a href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="language-plaintext highlighter-rouge">int</code></a>, <a href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><code class="language-plaintext highlighter-rouge">float</code></a>, and <a href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="language-plaintext highlighter-rouge">str</code></a> objects are “scalar” while <a href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.9)"><code class="language-plaintext highlighter-rouge">list</code></a> or <a href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.9)"><code class="language-plaintext highlighter-rouge">tuple</code></a> are not.</p>
+<h3 id="duck-array">duck array</h3>
+<p><a href="https://numpy.org/neps/nep-0022-ndarray-duck-typing-overview.html">Duck arrays</a> are array implementations that behave like numpy arrays. They have to define the <code class="language-plaintext highlighter-rouge">shape</code>, <code class="language-plaintext highlighter-rouge">dtype</code> and <code class="language-plaintext highlighter-rouge">ndim</code> properties. For integration with <code class="language-plaintext highlighter-rouge">xarray</code>, the <code class="language-plaintext highlighter-rouge">__array__</code>, <code class="language-plaintext highlighter-rouge">__array_ufunc__</code> and <code class="language-plaintext highlighter-rouge">__array_function__</code> protocols are also required.</p>
+<h2 id="data-structures">Data structures</h2>
+<h3 id="dataarray-1">DataArray</h3>
+<h4 id="核心要素properties">核心要素properties</h4>
+<ul>
+  <li>values: a multi-dimensional array of values (e.g., a numpy ndarray, <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.Series.html#pandas.Series" title="(in pandas v1.1.4)"><code class="language-plaintext highlighter-rouge">Series</code></a>, <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.1.4)"><code class="language-plaintext highlighter-rouge">DataFrame</code></a> or <code class="language-plaintext highlighter-rouge">pandas.Panel</code>)</li>
+  <li>dims: a list of dimension names. If omitted and <code class="language-plaintext highlighter-rouge">coords</code> is a list of tuples, dimension names are taken from <code class="language-plaintext highlighter-rouge">coords</code>.</li>
+  <li>coords: a list or dictionary of coordinates. If a list, it should be a list of tuples where the first element is the dimension name and the second element is the corresponding coordinate array_like object.</li>
+  <li>attrs: a dictionary of attributes to add to the instance</li>
+  <li>name: a string that names the instance
+    <h4 id="创建dataarray">创建DataArray</h4>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">locs</span> <span class="o">=</span> <span class="p">[</span><span class="s">'IA'</span><span class="p">,</span><span class="s">'IL'</span><span class="p">,</span><span class="s">'IN'</span><span class="p">]</span>
+<span class="n">times</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">data_range</span><span class="p">(</span><span class="s">'2000-01-01'</span><span class="p">,</span><span class="n">periods</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">foo</span> <span class="o">=</span> <span class="n">xr</span><span class="p">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">coords</span> <span class="o">=</span> <span class="p">[</span><span class="n">times</span><span class="p">,</span><span class="n">locs</span><span class="p">],</span> <span class="n">dims</span> <span class="o">=</span> <span class="p">[</span><span class="s">'time'</span><span class="p">,</span> <span class="n">space</span><span class="p">])</span>
+<span class="n">foo</span>
+</code></pre></div>    </div>
+    <p>dimension names are always present in the xarray data model: if you do not provide them, defaults of the form <code class="language-plaintext highlighter-rouge">dim_N</code> will be created. However, coordinates are always optional, and dimensions do not have automatic coordinate labels.
+If you supply <code class="language-plaintext highlighter-rouge">coords</code> as a dictionary, you must explicitly provide <code class="language-plaintext highlighter-rouge">dims</code>.
+```python
+列表形式
+xr.DataArray(data, coords = [(‘time’,times),(‘space’,locs)])</p>
+  </li>
+</ul>
+
+<p>字典形式
+xr.DataArray(
+	data,
+	coords = {
+	‘time’:times,
+	‘space’:locs,
+	‘const’:42,
+	‘ranking’:(‘space’,[1,2,3]),
+	},
+	dims=[‘time’,’space’]
+)
+一个坐标覆盖两个维度
+xr.DataArray(
+	data,
+	coords = {
+	‘time’:times,
+	‘space’:locs,
+	‘const’:42,
+	‘ranking’:((‘time’,’space’),np.arange(12).reshape(4,3)),
+	},
+	dims=[‘time’,’space’]
+)
+从pandas.DataFrame导入
+df = pd.DataFrame({‘x’:[0,1],’y’:[2,3]},index = [‘a’,’b’])
+df.index.name = ‘abc’
+df.columns.name = ‘xyz’
+df
+xr.DataArray(df)</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>**DataArray的values只支持同类型数据**
+#### DataArray的要素
+	values
+	dims
+	coords
+	attrs
+#### 获取DataArray的坐标Coordinates
+两种方式
+```python
+foo.coords['time']
+foo['time']
+</code></pre></div></div>
+<p>新增和删除coords</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">foo</span><span class="p">[</span><span class="s">'ranking'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s">'space'</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">23</span><span class="p">])</span>
+<span class="k">del</span> <span class="n">foo</span><span class="p">[</span><span class="s">'ranking'</span><span class="p">]</span>
+</code></pre></div></div>
+<h3 id="dataset-1">Dataset</h3>
+<p><a href="http://xarray.pydata.org/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="xarray.Dataset"><code class="language-plaintext highlighter-rouge">xarray.Dataset</code></a> is xarray’s multi-dimensional equivalent of a <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.1.4)"><code class="language-plaintext highlighter-rouge">DataFrame</code></a>. It is a dict-like container of labeled arrays (<a href="http://xarray.pydata.org/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="xarray.DataArray"><code class="language-plaintext highlighter-rouge">DataArray</code></a> objects) with aligned dimensions. It is designed as an in-memory representation of the data model from the <a href="http://www.unidata.ucar.edu/software/netcdf/">netCDF</a> file format.</p>
+<h4 id="dataset的四类要素property">Dataset的四类要素property</h4>
+<ul>
+  <li>dims: a dictionary mapping from dimension names to the fixed length of each dimension (e.g., <code class="language-plaintext highlighter-rouge">{'x': 6, 'y': 6, 'time': 8}</code>)</li>
+  <li>data_vars: : a dict-like container of DataArrays corresponding to variables</li>
+  <li>coords: another dict-like container of DataArrays intended to label points used in <code class="language-plaintext highlighter-rouge">data_vars</code> (e.g., arrays of numbers, datetime objects or strings)</li>
+  <li>attrs: <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><code class="language-plaintext highlighter-rouge">dict</code></a> to hold arbitrary metadata
+<img src="http://xarray.pydata.org/en/stable/_images/dataset-diagram.png" alt="_images/dataset-diagram.png" />
+In this example, it would be natural to call <code class="language-plaintext highlighter-rouge">temperature</code> and <code class="language-plaintext highlighter-rouge">precipitation</code> “data variables” and all the other arrays “coordinate variables” because they label the points along the dimensions. (see <a href="http://xarray.pydata.org/en/stable/data-structures.html#id8">1</a> for more background on this example).
+    <h4 id="creating-a-dataset">Creating a Dataset</h4>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">data_vars</code> should be a dictionary with each key as the name of the variable and each value as one of:
+    <ul>
+      <li>A <a href="http://xarray.pydata.org/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="xarray.DataArray"><code class="language-plaintext highlighter-rouge">DataArray</code></a> or <a href="http://xarray.pydata.org/en/stable/generated/xarray.Variable.html#xarray.Variable" title="xarray.Variable"><code class="language-plaintext highlighter-rouge">Variable</code></a></li>
+      <li>A tuple of the form <code class="language-plaintext highlighter-rouge">(dims, data[, attrs])</code>, which is converted into arguments for <a href="http://xarray.pydata.org/en/stable/generated/xarray.Variable.html#xarray.Variable" title="xarray.Variable"><code class="language-plaintext highlighter-rouge">Variable</code></a></li>
+      <li>A pandas object, which is converted into a <code class="language-plaintext highlighter-rouge">DataArray</code></li>
+      <li>A 1D array or list, which is interpreted as values for a one dimensional coordinate variable along the same dimension as it’s name</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">coords</code> should be a dictionary of the same form as <code class="language-plaintext highlighter-rouge">data_vars</code>.</li>
+  <li><code class="language-plaintext highlighter-rouge">attrs</code> should be a dictionary.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">temp</span> <span class="o">=</span> <span class="mi">15</span><span class="o">+</span> <span class="mi">8</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">precip</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">lon</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mf">99.83</span><span class="p">,</span><span class="o">-</span><span class="mf">99.32</span><span class="p">],[</span><span class="o">-</span><span class="mf">99.79</span><span class="p">,</span><span class="o">-</span><span class="mf">99.23</span><span class="p">]]</span>
+<span class="n">lat</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">42.25</span><span class="p">,</span><span class="mf">42.21</span><span class="p">],[</span><span class="mf">42.63</span><span class="p">,</span><span class="mf">42.59</span><span class="p">]]</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="p">.</span><span class="n">Dataset</span><span class="p">({</span>
+    <span class="s">'temperature'</span><span class="p">:([</span><span class="s">'x'</span><span class="p">,</span><span class="s">'y'</span><span class="p">,</span><span class="s">'time'</span><span class="p">],</span><span class="n">temp</span><span class="p">),</span>
+    <span class="s">'precipitation'</span><span class="p">:([</span><span class="s">'x'</span><span class="p">,</span><span class="s">'y'</span><span class="p">,</span><span class="s">'time'</span><span class="p">],</span><span class="n">precip</span><span class="p">),</span>
+<span class="p">},</span>
+<span class="n">coords</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">'lon'</span><span class="p">:([</span><span class="s">'x'</span><span class="p">,</span><span class="s">'y'</span><span class="p">],</span><span class="n">lon</span><span class="p">),</span>
+    <span class="s">'lat'</span><span class="p">:([</span><span class="s">'x'</span><span class="p">,</span><span class="s">'y'</span><span class="p">],</span><span class="n">lat</span><span class="p">),</span>
+    <span class="s">'time'</span><span class="p">:</span><span class="n">pd</span><span class="p">.</span><span class="n">date_range</span><span class="p">(</span><span class="s">'2014-09-06'</span><span class="p">,</span><span class="n">periods</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+    <span class="s">'reference_time'</span><span class="p">:</span><span class="n">pd</span><span class="p">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">'2014-09-05'</span><span class="p">),</span>
+<span class="p">},)</span>
+
+<span class="n">ds</span>
+<span class="n">ds</span><span class="p">.</span><span class="n">data_vars</span>
+<span class="n">ds</span><span class="p">.</span><span class="n">coords</span>
+<span class="n">ds</span><span class="p">.</span><span class="n">temperature</span>
+<span class="c1">#此处可以发现，xy其实是工具人，只代表维度，真正能发挥作用的是lat和lon坐标
+</span></code></pre></div></div>
+<h4 id="dataset-contents">Dataset contents</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s">'temperature'</span> <span class="ow">in</span> <span class="n">ds</span>
+<span class="n">ds</span><span class="p">[</span><span class="s">'temperature'</span><span class="p">]</span>
+</code></pre></div></div>
+<h4 id="dictionary-like-methods">Dictionary like methods</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="p">.</span><span class="n">Dataset</span><span class="p">()</span>
+<span class="n">ds</span><span class="p">[</span><span class="s">"temperature"</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s">"x"</span><span class="p">,</span> <span class="s">"y"</span><span class="p">,</span> <span class="s">"time"</span><span class="p">),</span> <span class="n">temp</span><span class="p">)</span>
+<span class="n">ds</span><span class="p">[</span><span class="s">"temperature_double"</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s">"x"</span><span class="p">,</span> <span class="s">"y"</span><span class="p">,</span> <span class="s">"time"</span><span class="p">),</span> <span class="n">temp</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">ds</span><span class="p">[</span><span class="s">"precipitation"</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s">"x"</span><span class="p">,</span> <span class="s">"y"</span><span class="p">,</span> <span class="s">"time"</span><span class="p">),</span> <span class="n">precip</span><span class="p">)</span>
+<span class="n">ds</span><span class="p">.</span><span class="n">coords</span><span class="p">[</span><span class="s">"lat"</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s">"x"</span><span class="p">,</span> <span class="s">"y"</span><span class="p">),</span> <span class="n">lat</span><span class="p">)</span>
+<span class="n">ds</span><span class="p">.</span><span class="n">coords</span><span class="p">[</span><span class="s">"lon"</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s">"x"</span><span class="p">,</span> <span class="s">"y"</span><span class="p">),</span> <span class="n">lon</span><span class="p">)</span>
+<span class="n">ds</span><span class="p">.</span><span class="n">coords</span><span class="p">[</span><span class="s">"time"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">date_range</span><span class="p">(</span><span class="s">"2014-09-06"</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ds</span><span class="p">.</span><span class="n">coords</span><span class="p">[</span><span class="s">"reference_time"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">Timestamp</span><span class="p">(</span><span class="s">"2014-09-05"</span><span class="p">)</span>
+
+
+</code></pre></div></div>
+<h4 id="拷贝删除创建副本">拷贝、删除、创建副本</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ds</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1">#弱复制，只是容器被复制，源文件不变
+</span><span class="n">ds</span><span class="p">.</span><span class="n">drop_vars</span><span class="p">[</span><span class="s">'temperature'</span><span class="p">]</span>
+<span class="n">ds</span><span class="p">.</span><span class="n">drop_dims</span><span class="p">(</span><span class="s">'time'</span><span class="p">)</span>
+<span class="n">ds</span><span class="p">.</span><span class="n">assign</span><span class="p">(</span><span class="n">temperature2</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span> <span class="n">ds</span><span class="p">.</span><span class="n">tempeture</span><span class="p">)</span>
+</code></pre></div></div>
+<h4 id="pipe方法">pipe()方法</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="n">ds</span><span class="p">.</span><span class="n">temperature</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">).</span><span class="n">pipe</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">2</span> <span class="o">*</span><span class="n">x</span><span class="p">).</span><span class="n">mean</span><span class="p">(</span><span class="s">'y'</span><span class="p">).</span><span class="n">pipe</span><span class="p">(</span><span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">)</span>
+</code></pre></div></div>
+<h4 id="xarray鼓励创建新dataset">Xarray鼓励创建新dataset</h4>
+<p>With xarray, there is no performance penalty for creating new datasets, even if variables are lazily loaded from a file on disk. Creating new objects instead of mutating existing objects often results in easier to understand code, so we encourage using this approach.</p>
+<h4 id="变换坐标系swap_dims">变换坐标系，swap_dims()</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ds</span><span class="p">.</span><span class="n">coords</span><span class="p">[</span><span class="s">'day'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s">'time'</span><span class="p">,[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
+<span class="n">ds</span><span class="p">.</span><span class="n">swap_dims</span><span class="p">({</span><span class="s">'time'</span><span class="p">:</span><span class="s">'day'</span><span class="p">})</span> <span class="c1">#把time坐标系替换为day坐标系
+</span></code></pre></div></div>
+<h3 id="coordinates">Coordinates</h3>
+<h4 id="dimension-coordinates-cfdimension-coordinates">dimension coordinates (CF：dimension coordinates)</h4>
+<ul>
+  <li>与dimension的name保持一致，使用pandas.Index来store their values
+    <h4 id="non-dimension-coordinatescfauxiliary-coordinate-variables">non-dimension coordinates（CF：auxiliary coordinate variables）</h4>
+  </li>
+  <li>are variables that contain coordinate data, but are not a dimension coordinate. They can be multidimensional (see <a href="http://xarray.pydata.org/en/stable/examples/multidimensional-coords.html">Working with Multidimensional Coordinates</a>), and there is no relationship between the name of a non-dimension coordinate and the name(s) of its dimension(s). Non-dimension coordinates can be useful for indexing or plotting; otherwise, xarray does not make any direct use of the values associated with them. They are not used for alignment or automatic indexing, nor are they required to match when doing arithmetic (see <a href="http://xarray.pydata.org/en/stable/computation.html#coordinates-math">Coordinates</a>).</li>
+</ul>
+
+<h4 id="modifying-coordinates-and-coordinate-methods">Modifying coordinates and coordinate methods</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ds</span><span class="p">.</span><span class="n">reset_coords</span><span class="p">()</span>
+<span class="n">ds</span><span class="p">.</span><span class="n">set_coords</span><span class="p">([</span><span class="s">'temperature'</span><span class="p">,</span><span class="s">'precipitation'</span><span class="p">])</span>
+<span class="n">ds</span><span class="p">.</span><span class="n">coords</span><span class="p">.</span><span class="n">to_dataset</span><span class="p">()</span>
+<span class="n">ds</span><span class="p">.</span><span class="n">coords</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">alt</span><span class="p">.</span><span class="n">coords</span><span class="p">)</span>
+<span class="n">ds</span><span class="p">[</span><span class="s">'time'</span><span class="p">].</span><span class="n">to_index</span><span class="p">()</span>
+<span class="n">ds</span><span class="p">.</span><span class="n">indexes</span>
+</code></pre></div></div>
+<p>####</p>
+<h2 id="indexing-and-selecting-data">Indexing and selecting data</h2>
+<p>x[dict(space=0)]  = x.isel(space=0)
+x.loc[dict(space=’IA’)] = x.sel(space=’IA’)
+并无iloc，而是dict或者isel</p>
+<h3 id="positional-indexing">Positional indexing</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">da</span> <span class="o">=</span> <span class="n">xr</span><span class="p">.</span><span class="n">DataArray</span><span class="p">(</span>
+    <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="s">"time"</span><span class="p">,</span> <span class="n">pd</span><span class="p">.</span><span class="n">date_range</span><span class="p">(</span><span class="s">"2000-01-01"</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">4</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s">"space"</span><span class="p">,</span> <span class="p">[</span><span class="s">"IA"</span><span class="p">,</span> <span class="s">"IL"</span><span class="p">,</span> <span class="s">"IN"</span><span class="p">]),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+<span class="n">da</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">da</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">da</span><span class="p">[:,[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span>
+<span class="n">da</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="s">"2000-01-01"</span><span class="p">:</span><span class="s">"2000-01-02"</span><span class="p">,</span> <span class="s">"IA"</span><span class="p">]</span>
+<span class="n">da</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="s">"2000-01-01"</span><span class="p">,</span> <span class="p">[</span><span class="s">"IL"</span><span class="p">,</span> <span class="s">"IN"</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">10</span> <span class="c1">#Dataset不支持此类赋值方式，只有DataArray支持
+</span></code></pre></div></div>
+<h3 id="indexing-with-dimension-names">Indexing with dimension names</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sel</span><span class="p">()</span><span class="n">和isel</span><span class="p">()</span> <span class="n">method</span>
+<span class="n">da</span><span class="p">.</span><span class="n">isel</span><span class="p">(</span><span class="n">space</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">time</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">da</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="s">'2000-01-01'</span><span class="p">,</span><span class="s">'2000-01-02'</span><span class="p">))</span>
+</code></pre></div></div>
+<h3 id="nearest-neighbor-lookups">Nearest neighbor lookups</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sel</span><span class="p">(),</span> <span class="n">reindex</span><span class="p">(),</span> <span class="n">reindex_like</span><span class="p">()</span> <span class="nb">all</span> <span class="n">support</span> <span class="s">'method'</span> <span class="ow">and</span> <span class="s">'tolerance'</span> <span class="n">keyword</span> <span class="n">argument</span><span class="p">,</span> <span class="n">但是不支持配合slice的sel函数</span><span class="err">，</span><span class="n">但slice本身就可以挑选在其内的xarray</span>
+<span class="n">method</span><span class="p">:</span> <span class="n">pad</span><span class="p">,</span> <span class="n">backfill</span><span class="p">,</span> <span class="n">nearest</span> <span class="c1">#此处前两者用法需要进一步了解
+</span><span class="n">da</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">1.9</span><span class="p">],</span><span class="n">method</span> <span class="o">=</span> <span class="s">'nearest'</span><span class="p">)</span>
+<span class="n">da</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">'backfill'</span><span class="p">)</span>
+<span class="n">da</span><span class="p">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">1.5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mf">2.5</span><span class="p">].</span><span class="n">method</span><span class="o">=</span><span class="s">'pad'</span><span class="p">)</span>
+<span class="n">reversed_da</span> <span class="o">=</span> <span class="n">da</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">reversed_da</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="mf">3.1</span><span class="p">:</span><span class="mf">0.9</span><span class="p">]</span>
+</code></pre></div></div>
+<h3 id="dataset-indexing">Dataset indexing</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ds</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">dataset</span>
+<span class="n">ds</span><span class="p">.</span><span class="n">isel</span><span class="p">(</span><span class="n">space</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">time</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="c1">#位置索引法
+</span><span class="n">ds</span><span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">space</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">time</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+
+<span class="n">ds</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s">'2000-01-01'</span><span class="p">)</span> <span class="c1">#标签索引法
+</span><span class="n">ds</span><span class="p">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s">'2000-01-01'</span><span class="p">)]</span>
+
+</code></pre></div></div>
+<h3 id="dropping-labels-and-dimensions">Dropping labels and dimensions</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ds</span><span class="p">.</span><span class="n">drop_sel</span><span class="p">()</span> <span class="c1">#both for Dataset and DataArray
+</span><span class="n">ds</span><span class="p">.</span><span class="n">drop_dims</span><span class="p">()</span>
+</code></pre></div></div>
+<h3 id="masking-with-where">Masking with where</h3>
+<p>索引的方法普遍返回一个数据集的子集，但是有时候需要保留原有数据集的形状（shape），因此可以采用where的用法</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">da</span> <span class="o">=</span> <span class="n">xr</span><span class="p">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s">'x'</span><span class="p">,</span><span class="s">'y'</span><span class="p">])</span>
+<span class="n">da</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">da</span><span class="p">.</span><span class="n">x</span><span class="o">+</span><span class="n">da</span><span class="p">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">da</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">da</span><span class="p">.</span><span class="n">y</span><span class="o">&lt;</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div>
+<h3 id="selecting-values-with-isin">Selecting values with isin</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">da</span> <span class="o">=</span> <span class="n">xr</span><span class="p">.</span><span class="n">DataArray</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s">"x"</span><span class="p">])</span>
+<span class="n">da</span><span class="p">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+
+<span class="c1">#isin与where配合
+</span><span class="n">lookup</span> <span class="o">=</span> <span class="n">xr</span><span class="p">.</span><span class="n">DataArray</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">],</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s">'x'</span><span class="p">])</span>
+<span class="n">da</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">lookup</span><span class="p">.</span><span class="n">isin</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">]),</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="c1">#但以上速度明显慢于sel()用法
+</span></code></pre></div></div>
+<h3 id="vectorized-indexing-比较难的一节">Vectorized Indexing (比较难的一节)</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">da</span> <span class="ow">is</span> <span class="n">DataArray</span>
+<span class="n">da</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]]</span>
+
+<span class="n">ind_x</span> <span class="o">=</span> <span class="n">xr</span><span class="p">.</span><span class="n">DataArray</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s">'x'</span><span class="p">])</span>
+<span class="n">ind_y</span> <span class="o">=</span> <span class="n">xr</span><span class="p">.</span><span class="n">DataArray</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s">'y'</span><span class="p">])</span>
+<span class="n">ind</span> <span class="o">=</span> <span class="n">xr</span><span class="p">.</span><span class="n">DataArray</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span><span class="n">dims</span> <span class="o">=</span> <span class="p">[</span><span class="s">'a'</span><span class="p">,</span><span class="s">'b'</span><span class="p">])</span>
+<span class="n">da</span><span class="p">[</span><span class="n">ind_x</span><span class="p">,</span><span class="n">ind_y</span><span class="p">]</span> <span class="n">正交索引</span>
+<span class="n">da</span><span class="p">[</span><span class="n">ind_x</span><span class="p">,</span><span class="n">ind_x</span><span class="p">]</span> <span class="n">向量索引</span>
+<span class="n">da</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
+</code></pre></div></div>
+<h3 id="assigning-values-with-indexing">Assigning values with indexing</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">赋值</span><span class="err">：</span> <span class="p">.</span><span class="n">loc</span><span class="p">()</span><span class="err">，</span> <span class="p">.</span><span class="n">where</span><span class="p">()</span> <span class="p">.</span><span class="n">向量化方式</span><span class="err">（</span><span class="n">难的那一节</span><span class="err">）</span>
+<span class="n">不要使用isel和sel函数赋值</span><span class="err">，</span><span class="n">会失败</span>
+<span class="n">Dask包无法使用并行赋值</span>
+</code></pre></div></div>
+<h3 id="more-advanced-indexing">More advanced indexing</h3>
+<blockquote>
+  <p>source: <a href="http://xarray.pydata.org/en/stable/indexing.html#more-advanced-indexing">More advanced indexing</a></p>
+  <h3 id="align-and-reindex">Align and reindex</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/indexing.html#align-and-reindex">Align and reindex</a></p>
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">.</span><span class="n">reindex</span><span class="p">()</span>
+<span class="p">.</span><span class="n">reindex_like</span><span class="p">()</span>
+<span class="p">.</span><span class="n">align</span><span class="p">(</span><span class="n">join</span><span class="o">=</span><span class="n">outer</span><span class="p">,</span><span class="n">inner</span><span class="p">,</span><span class="n">left</span><span class="p">,</span><span class="n">right</span><span class="p">)</span>
+</code></pre></div>  </div>
+  <h3 id="missing-coordinate-labels">Missing coordinate labels</h3>
+  <p>source: <a href="http://xarray.pydata.org/en/stable/indexing.html#missing-coordinate-labels">Missing coordinate labels</a></p>
+  <h3 id="underlying-indexes">Underlying Indexes</h3>
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">da</span> <span class="ow">is</span> <span class="n">Xarray</span>
+<span class="n">da</span><span class="p">.</span><span class="n">indexes</span><span class="p">[</span><span class="s">'time'</span><span class="p">]</span>  <span class="n">和</span><span class="p">.</span><span class="n">coords类似</span>
+</code></pre></div>  </div>
+  <h3 id="coples-vs-views">Coples vs. Views</h3>
+  <p>source: <a href="http://xarray.pydata.org/en/stable/indexing.html#copies-vs-views">Copies vs. Views</a></p>
+  <ul>
+    <li>Positional indexing with only integers and slices returns a view.</li>
+    <li>Positional indexing with arrays or lists returns a copy.</li>
+    <li>Label-based indexing with only slices returns a view.</li>
+    <li>Label-based indexing with arrays returns a copy.</li>
+    <li>Label-based indexing with scalars returns a view or a copy, depending upon if the corresponding positional indexer can be represented as an integer or a slice object. The exact rules are determined by pandas.
+      <h3 id="multi-level-indexing">Multi-level indexing</h3>
+      <p>source: <a href="http://xarray.pydata.org/en/stable/indexing.html#multi-level-indexing">Multi-level indexing</a></p>
+      <h3 id="indexing-rules">Indexing rules</h3>
+      <p>source: <a href="http://xarray.pydata.org/en/stable/indexing.html#indexing-rules">Indexing rules</a></p>
+      <h2 id="interpolating-data">Interpolating data</h2>
+      <h3 id="scalar-and-1-dimensional-interpolation">Scalar and 1-dimensional interpolation</h3>
+      <p>```python
+da is xarray
+da.interp(time=2.5)
+da.interp(time=[2,5,3.5])</p>
+    </li>
+  </ul>
+</blockquote>
+
+<p>da_dt64 = xr.DataArray([1,3],[(‘time’,pd.date_range(‘1/1/2000’,’1/3/2000’,periods=2))])
+da_dt64.interp(time=’2000-01-02’)
+da_dt64.interp(time=pd.date_range(‘1/1/2000’,’1/3/2000’,periods=3))</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>### Multi-dimensional Interpolation
+```python
+da.interp(time=2.5,space=0.15)
+#interp_like
+other = xr.DataArray(np.sin(0.4*np.arange(9).reshape(3,3)),[('time',[0.9,1.9,2.9]),('space',[0.15,0.25,0.35])])
+interpolated = da.interp_like(other)
+interpolated
+</code></pre></div></div>
+<h3 id="interpolation-methods">Interpolation methods</h3>
+<blockquote>
+  <p><a href="http://xarray.pydata.org/en/stable/interpolation.html#interpolation-methods">Interpolation methods</a></p>
+  <h3 id="advanced-interpolation">Advanced Interpolation</h3>
+  <p><img src="http://xarray.pydata.org/en/stable/_images/advanced_selection_interpolation.svg" alt="advanced indexing and interpolation|500" />
+<a href="http://xarray.pydata.org/en/stable/interpolation.html#advanced-interpolation">Advanced Interpolation</a></p>
+  <h3 id="interpolating-arrays-with-nan">Interpolating arrays with Nan</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/interpolation.html#advanced-interpolation">Advanced Interpolation</a>](http://xarray.pydata.org/en/stable/interpolation.html#interpolating-arrays-with-nan)</p>
+  <h3 id="example">Example</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/interpolation.html#example">Example</a></p>
+  <h2 id="computation-1">Computation</h2>
+  <h3 id="basic-array-math">Basic array math</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/computation.html#basic-array-math">Basic array math</a></p>
+  <h3 id="misssing-values">Misssing values</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/computation.html#missing-values">Missing values</a></p>
+  <h3 id="aggregation">Aggregation</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/computation.html#aggregation">Aggregation</a></p>
+  <h3 id="rolling-window-operations">Rolling window operations</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/computation.html#rolling-window-operations">Rolling window operations</a></p>
+  <h3 id="weighted-array-reductions">Weighted array reductions</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/computation.html#weighted-array-reductions">Weighted array reductions</a></p>
+  <h3 id="coarsen-large-arrays">Coarsen large arrays</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/computation.html#coarsen-large-arrays">Coarsen large arrays
+</a></p>
+  <h3 id="computation-using-coordinates">Computation using Coordinates</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/computation.html#computation-using-coordinates">Computation using Coordinates</a></p>
+  <h3 id="fitting-polynomials">Fitting polynomials</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/computation.html#fitting-polynomials">Fitting polynomials</a></p>
+  <h3 id="broadcasting-by-dimension-name">Broadcasting by dimension name</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/computation.html#broadcasting-by-dimension-name">Broadcasting by dimension name</a></p>
+  <h3 id="automatic-alignment">Automatic alignment</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/computation.html#automatic-alignment">Automatic alignment</a></p>
+  <h3 id="coordinates-1">Coordinates</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/computation.html#coordinates">Coordinates</a></p>
+  <h3 id="math-with-datasets">Math with datasets</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/computation.html#math-with-datasets">Math with datasets</a></p>
+  <h3 id="wrapping-custon-computation">Wrapping custon computation</h3>
+  <p><a href="http://xarray.pydata.org/en/stable/computation.html#wrapping-custom-computation">Wrapping custom computation</a></p>
+  <h2 id="groupby-split-apply-combine">Groupby: Split-apply-combine</h2>
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ds</span> <span class="ow">is</span> <span class="n">dataset</span>
+<span class="p">.</span><span class="n">groupby</span><span class="p">()</span>
+<span class="p">.</span><span class="n">groups</span>
+<span class="p">.</span><span class="nb">sum</span><span class="p">()</span>
+<span class="p">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="p">,</span><span class="nb">map</span><span class="p">()</span>
+</code></pre></div>  </div>
+  <p><a href="http://xarray.pydata.org/en/stable/groupby.html">GroupBy: split-apply-combine</a></p>
+  <h2 id="reshaping-and-reorganizing-data">Reshaping and reorganizing data</h2>
+  <p><a href="http://xarray.pydata.org/en/stable/reshaping.html">Reshaping and reorganizing data</a>
+```python
+transpose() #调换维度顺序
+expand_dims() #增加维度
+squeeze() #减少维度
+to_array() #dataset to dataarray
+to_dataset() #dataarray to dataset</p>
+</blockquote>
+
+<p>stack()
+unstack()</p>
+
+<p>to_stacked_array()
+to_unstacked_dataset()</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>### xarray使用sel的方法
+```python
+set_index() #创造Multiindex
+reset_index() #解除Multiindex
+</code></pre></div></div>
+<blockquote>
+  <p><a href="http://xarray.pydata.org/en/stable/reshaping.html#set-and-reset-index">Set and reset index</a></p>
+</blockquote>
+
+<h2 id="combining-data">Combining data</h2>
+<blockquote>
+  <p><a href="http://xarray.pydata.org/en/stable/combining.html">Combining data</a></p>
+  <h2 id="time-series-data">Time series data</h2>
+  <p><a href="http://xarray.pydata.org/en/stable/time-series.html">Time series data</a></p>
+  <h2 id="weather-and-climate-data">Weather and climate data</h2>
+  <p><a href="http://xarray.pydata.org/en/stable/weather-climate.html">Weather and climate data</a></p>
+  <h2 id="working-with-pandas">Working with pandas</h2>
+  <p><a href="http://xarray.pydata.org/en/stable/pandas.html">Working with pandas</a>
+```python
+for dataset
+to_dataframe()
+from_dataframe()</p>
+</blockquote>
+
+<p>for dataarray
+to_series()
+from_series()
+to_pandas() #一维series，二维dataframe</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>### 对面板数据的支持
+```python
+data = np.random.RandomState(0).rand(2, 3, 4)
+
+items = list("ab")
+
+major_axis = list("mno")
+
+minor_axis = pd.date_range(start="2000", periods=4, name="date")
+array = xr.DataArray(data, [items, major_axis, minor_axis])
+
+</code></pre></div></div>
+<p>A DataArray’s data is stored as a numpy array, and so can only contain a single type. As a result, a Panel that contains <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v1.1.4)"><code class="language-plaintext highlighter-rouge">DataFrame</code></a> objects with multiple types will be converted to <code class="language-plaintext highlighter-rouge">dtype=object</code>. A <code class="language-plaintext highlighter-rouge">Dataset</code> of multiple <code class="language-plaintext highlighter-rouge">DataArray</code> objects each with its own dtype will allow original types to be preserved.</p>
+<h2 id="reading-and-writing-file">Reading and writing file</h2>
+<blockquote>
+  <p><a href="http://xarray.pydata.org/en/stable/io.html">Reading and writing files</a></p>
+  <h2 id="parallel-computing-with-dask">Parallel computing with Dask</h2>
+  <h2 id="plotting-1">Plotting</h2>
+  <h2 id="working-with-numpy-like-arrays">Working with numpy-like arrays</h2>
+</blockquote>
+
+<h2 id="basic-xarray-notebook">Basic xarray notebook</h2>
+
+<h3 id="reading-data-and-associated-metadata-from-a-netcdf-file-into-an-xarray-dataset">Reading data and associated metadata from a netCDF file into an xarray dataset</h3>
+<p>An xarray <a href="http://xarray.pydata.org/en/stable/data-structures.html#dataset">dataset</a> is a container for data and it’s associated metadata, including labelled coordinates.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">xarray</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="p">.</span><span class="n">open_dataset</span><span class="p">()</span> <span class="c1">#nc 文件
+</span></code></pre></div></div>
+<p>Dimensions, Coordinates
+<code class="language-plaintext highlighter-rouge">Dimensions</code> give the size of each named dimension. This is a CF-compliant (<a href="http://cfconventions.org/">http://cfconventions.org</a>) dataset, which means any variable which has the same name as a dimension is assumed to be a coordinate. There are other metadata which may be used to denote a coordinate. In this case <code class="language-plaintext highlighter-rouge">xarray</code> signifies coordinates associated with variables with <code class="language-plaintext highlighter-rouge">*</code>.
+Data variables, Attributes
+<code class="language-plaintext highlighter-rouge">Data variables</code> lists all the variables that are not coordinates. In this case three of them are <strong>bounds variables, definining the beginning and end values for the three coordinates</strong>. The only true data variables is <code class="language-plaintext highlighter-rouge">tas</code>（本notebook的例子）.</p>
+
+<p>Data variables储存在</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ds</span><span class="p">.</span><span class="n">data_vars</span> <span class="c1">#变量介绍
+</span><span class="n">Data</span> <span class="n">variables</span><span class="p">:</span>
+    <span class="n">time</span>\<span class="n">_bnds</span>  <span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">bnds</span><span class="p">)</span> <span class="n">datetime64</span>\<span class="p">[</span><span class="n">ns</span>\<span class="p">]</span> <span class="mi">1850</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">1850</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="mi">01</span> <span class="p">...</span> <span class="mi">2006</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>
+    <span class="n">lat</span>\<span class="n">_bnds</span>   <span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">bnds</span><span class="p">)</span> <span class="n">float64</span> <span class="o">-</span><span class="mf">90.0</span> <span class="o">-</span><span class="mf">89.38</span> <span class="o">-</span><span class="mf">89.38</span> <span class="p">...</span> <span class="mf">89.38</span> <span class="mf">89.38</span> <span class="mf">90.0</span>
+    <span class="n">lon</span>\<span class="n">_bnds</span>   <span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">bnds</span><span class="p">)</span> <span class="n">float64</span> <span class="o">-</span><span class="mf">0.9375</span> <span class="mf">0.9375</span> <span class="mf">0.9375</span> <span class="p">...</span> <span class="mf">357.2</span> <span class="mf">357.2</span> <span class="mf">359.1</span>
+    <span class="n">tas</span>        <span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">)</span> <span class="n">float32</span> <span class="p">...</span>
+
+<span class="c1">#以上都是ds dataset的DataArray
+</span><span class="n">循环print变量名称</span>
+
+<span class="k">for</span> <span class="n">varname</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">:</span>
+	<span class="k">print</span><span class="p">(</span><span class="n">varnanme</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>获取变量</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ds</span><span class="p">[</span><span class="s">'tas'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="subsetting-a-dataset-by-time-and-space-slicing-and-dicing">Subsetting a dataset by time and space （Slicing and Dicing）</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas</span> <span class="o">=</span> <span class="n">ds</span><span class="p">.</span><span class="n">tas</span>
+<span class="n">tas</span><span class="p">.</span><span class="n">shape</span>
+<span class="n">tas</span><span class="p">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#与上命令一样,Return a new array indexed along the specified dimension(s).
+</span></code></pre></div></div>
+
+<h4 id="sel函数">’‘.sel’函数</h4>
+<p>The power of xarray comes with the close association of data with coordinates. So it is possible to use the equivalent `.sel` operator but with coordinate values. For example, to select an area that includes the Indian Ocean and Australia use `slice` to indicate the range of latitude and longitude values required and pass as key/value pairs to `sel`. <strong>`slice` will include coordinate values less than or equal to the upper bound</strong>, not like `range` in basic python that excludes the upper bound （如果是一段区间，则sel函数里面包含了左值和右值） 我怀疑isel的slice不是如此</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">lon</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">160</span><span class="p">),</span><span class="n">lat</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">80</span><span class="p">,</span><span class="mi">25</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h4 id="isel和sel的组合使用">isel和sel的组合使用</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas</span><span class="p">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">).</span><span class="n">sel</span><span class="p">(</span><span class="n">lon</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">160</span><span class="p">),</span><span class="n">lat</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">80</span><span class="p">,</span><span class="mi">25</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h4 id="sel和精确时间的搭配">sel和精确时间的搭配</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s">'1850-01-16T12:00:00'</span><span class="p">,</span><span class="n">lon</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">160</span><span class="p">),</span><span class="n">lat</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">80</span><span class="p">,</span><span class="mi">25</span><span class="p">))</span> <span class="c1">#如果是一段区间，则sel函数里面包含了左值和右值
+</span><span class="n">tas</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="s">'1871-03'</span><span class="p">,</span><span class="s">'1871-11'</span><span class="p">),</span><span class="n">lon</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">160</span><span class="p">),</span><span class="n">lat</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">80</span><span class="p">,</span><span class="mi">25</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h4 id="获取某一点最近的cell数据">获取某一点最近的cell数据</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas</span><span class="p">.</span><span class="n">cel</span><span class="p">(</span><span class="n">lat</span><span class="o">=-</span><span class="mf">27.47</span><span class="p">,</span><span class="n">lon</span><span class="o">=</span><span class="mf">153.03</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s">'nearest'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="plotting-with-xarray">Plotting with xarray</h3>
+<p>The <a href="http://xarray.pydata.org/en/stable/plotting.html">documentation of the xarray plot function is excellent</a>. Read it for an in-depth explanation of the power of the xarray plotting functionality. This notebook covers just enough to get started and make use of plots in subsequent tutorials.
+注意：xarray的plot函数只适用于DataArray而不适用于Dataset</p>
+
+<h4 id="初步dataarray绘图">初步DataArray绘图</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas</span> <span class="o">=</span> <span class="n">ds</span><span class="p">.</span><span class="n">tas</span>
+<span class="n">tas</span><span class="p">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">).</span><span class="n">plot</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+</code></pre></div></div>
+<h4 id="链式筛选isel和sel搭配使用绘图">链式筛选：isel和sel搭配使用绘图</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas</span><span class="p">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">).</span><span class="n">sel</span><span class="p">(</span><span class="n">lon</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">160</span><span class="p">),</span><span class="n">lat</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">80</span><span class="p">,</span><span class="mi">25</span><span class="p">)).</span><span class="n">plot</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+</code></pre></div></div>
+<h4 id="xarray将会自动识别数据类型选择绘图样式">xarray将会自动识别数据类型，选择绘图样式</h4>
+<ul>
+  <li>如果维度过高，将默认绘制长条图，例如：
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="s">'1871-01'</span><span class="p">,</span><span class="s">'1876-12'</span><span class="p">),</span><span class="n">lon</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">160</span><span class="p">),</span><span class="n">lat</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="o">-</span><span class="mi">80</span><span class="p">,</span><span class="mi">25</span><span class="p">)).</span><span class="n">plot</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span> <span class="c1">#这句命令运行速度极慢，发现原因是远程的问题，如果文件在本地，则很快
+</span></code></pre></div>    </div>
+  </li>
+  <li>如果制定某一坐标点，将会返回时间序列值，例如
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="s">'1871-01'</span><span class="p">,</span><span class="s">'1876-12'</span><span class="p">)).</span><span class="n">sel</span><span class="p">(</span><span class="n">lat</span><span class="o">=-</span><span class="mf">27.47</span><span class="p">,</span><span class="n">lon</span><span class="o">=</span><span class="mf">153.03</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s">'nearest'</span><span class="p">).</span><span class="n">plot</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="calculating-metrics-eg-mean-maximum">Calculating metrics, e.g. mean, maximum</h3>
+<h4 id="计算平均温度">计算平均温度</h4>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas</span><span class="p">.</span><span class="n">mean</span><span class="p">()</span> <span class="c1">#总的
+</span><span class="n">tas</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s">'time'</span><span class="p">).</span><span class="n">plot</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span> <span class="c1">#针对某一dimension
+</span><span class="n">tas_clim</span> <span class="o">=</span> <span class="n">tas</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="s">'1960-01'</span><span class="p">,</span><span class="s">'1989-12'</span><span class="p">)).</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s">'time'</span><span class="p">)</span><span class="c1">#针对某一时段的某一dimension（30年）
+</span></code></pre></div></div>
+<h4 id="异常值计算">异常值计算</h4>
+<p>The anomaly from the 30 year climatology can now be calculated by subtracting it from the original data. xarray checks which named coordinates match between the two data sets, and <em>broadcasts</em> the <code class="language-plaintext highlighter-rouge">tas_clim</code> data along the missing <code class="language-plaintext highlighter-rouge">time</code> dimension automatically</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas_anom</span> <span class="o">=</span> <span class="p">(</span><span class="n">tas</span><span class="o">-</span><span class="n">tas_clim</span><span class="p">)</span> <span class="c1">#xarray会自动广播tas_clim这一平均值至tas每一年
+</span><span class="n">tas_anom</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="s">'1960-01'</span><span class="p">,</span><span class="bp">None</span><span class="p">)).</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="s">'lat'</span><span class="p">,</span><span class="s">'lon'</span><span class="p">)).</span><span class="n">plot</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span> <span class="c1">#mean(dim='lat','lon')
+</span></code></pre></div></div>
+<h3 id="grouping-and-resampling-in-time">Grouping and resampling in time</h3>
+<p>xarray was developed as an n-dimensional extension of <a href="https://pandas.pydata.org/">pandas</a>, a very powerful data analysis library designed primarily for tabular data and time series analysis.</p>
+
+<p>As a result xarray can utilise much of the time series manipulation power of pandas. The relevant xarray documentation is contained in the <a href="http://xarray.pydata.org/en/stable/groupby.html">GroupBy</a> and <a href="http://xarray.pydata.org/en/stable/time-series.html">Time series data</a> sections.</p>
+
+<p>In this case we need to do some extra imports to avoid pandas emitting warnings</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">xarray</span><span class="p">,</span> <span class="n">matplotlib</span><span class="p">.</span><span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">pandas.plotting</span> <span class="kn">import</span> <span class="n">register_matplotlib_converters</span>
+<span class="n">register_matplotlib_converters</span> <span class="c1">#防止matplotlib报错pandas的时间戳问题 
+</span></code></pre></div></div>
+
+<p>register_matplotlib_converters的Url: <a href="https://www.freesion.com/article/4435362995/">因pandas版本的问题造成时间戳’Timestamp’的报错处理pandas.plotting.register_matplotlib_converters</a></p>
+
+<h4 id="resample">Resample</h4>
+<h5 id="时间分野-抽样">时间分野-抽样</h5>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas_anom_yearly</span> <span class="o">=</span> <span class="n">tas_anom</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="s">'2001-01'</span><span class="p">,</span><span class="bp">None</span><span class="p">)).</span><span class="n">resample</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="s">'Y'</span><span class="p">).</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s">'time'</span><span class="p">)</span>
+<span class="n">tas_anom_yearly</span><span class="p">.</span><span class="n">dims</span><span class="p">,</span> <span class="n">tas_anom_yearly</span><span class="p">.</span><span class="n">shape</span> <span class="c1">#维度和大小，后者因重抽样发生了变化
+</span><span class="n">tas_anom_yearly</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="s">'lat'</span><span class="p">,</span><span class="s">'lon'</span><span class="p">)).</span><span class="n">plot</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span> <span class="c1">#显示出全球升温，是指异常高温更频繁了，这里关于统计抽样的理解需要更深化（高温、Cell、温升）
+</span></code></pre></div></div>
+
+<h5 id="空间分野-抽样">空间分野-抽样</h5>
+<p>依照空间抽样后的数据，南北半球分野</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">axes</span><span class="p">()</span>
+<span class="n">axes</span><span class="p">.</span><span class="n">figure</span><span class="p">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">tas_anom_yearly</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="s">'lat'</span><span class="p">,</span><span class="s">'lon'</span><span class="p">)).</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">'Global'</span><span class="p">)</span>
+<span class="n">tas_anom_yearly</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">lat</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="bp">None</span><span class="p">)).</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="s">'lat'</span><span class="p">,</span><span class="s">'lon'</span><span class="p">)).</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">'Northern Hemisphere'</span><span class="p">)</span>  <span class="c1">#零纬度以北
+</span><span class="n">tas_anom_yearly</span><span class="p">.</span><span class="n">sel</span><span class="p">(</span><span class="n">lat</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span><span class="mi">0</span><span class="p">)).</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="s">'lat'</span><span class="p">,</span><span class="s">'lon'</span><span class="p">)).</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s">'Southern Hemisphere'</span><span class="p">)</span>  <span class="c1">#零纬度以南
+</span><span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Temperature anoalies from a 1960-1990 climatology'</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h5 id="空间分野-精细化抽样">空间分野-精细化抽样</h5>
+<p>To go further and split the trend more finely in latitude it is easier to use the <code class="language-plaintext highlighter-rouge">xarray.groupby_bins</code> function. It is called with a coordinate and either a number of <code class="language-plaintext highlighter-rouge">bins</code> or an array of values specifying the start and end of each bin. It returns a <code class="language-plaintext highlighter-rouge">groupby</code> object which can be iterated over, or chain a function which will applied to each group.
+下文代码展示grouby_bins的作用（针对某一维度进行N等分）</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">tas_anom_yearly</span><span class="p">.</span><span class="n">groupby_bins</span><span class="p">(</span><span class="s">'lats'</span><span class="p">,</span><span class="nb">bin</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+	<span class="k">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">d</span><span class="p">.</span><span class="n">dims</span><span class="p">,</span><span class="n">d</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas_anom_yearly</span><span class="p">.</span><span class="n">groupby_bins</span><span class="p">(</span><span class="s">'lat'</span><span class="p">,</span><span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">).</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="s">'lat'</span><span class="p">,</span><span class="s">'lon'</span><span class="p">)).</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'time'</span><span class="p">,</span><span class="n">hue</span><span class="o">=</span><span class="s">'lat_bins'</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>下文代码展示groupby的作用，以xarray的季节划分为例</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas</span><span class="p">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">'time.season'</span><span class="p">).</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s">'time'</span><span class="p">).</span><span class="n">plot</span><span class="p">(</span><span class="n">col</span><span class="o">=</span><span class="s">'season'</span><span class="p">,</span><span class="n">col_wrap</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>此处发现四季的缩写：</p>
+<blockquote>
+  <p>The results are presented for the standard seasons: winter (DJF), spring (MAM), summer (JJA), and fall (SON).
+source: <a href="https://www.google.com/search?newwindow=1&amp;ei=fHYiYOLwCdGlkwW23IGADg&amp;q=four+seasons+abbreviation+DJF&amp;oq=four+seasons+abbreviation+DJF&amp;gs_lcp=CgZwc3ktYWIQAzIHCAAQsAMQHlC2gQFYy4oBYNuLAWgBcAB4AIABzz6IAc8-kgEDOS0xmAEAoAEBqgEHZ3dzLXdpesgBAcABAQ&amp;sclient=psy-ab&amp;ved=0ahUKEwjinsDj3dzuAhXR0qQKHTZuAOAQ4dUDCA0&amp;uact=5">four seasons abbreviation DJF - Google 搜索</a></p>
+</blockquote>
+
+<h3 id="masking">Masking</h3>
+<p>遮盖和筛选，比如温度范围</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas0</span> <span class="o">=</span> <span class="n">tas</span><span class="p">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="n">第一年</span>
+<span class="n">tas0</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">tas0</span><span class="o">&gt;</span><span class="mi">270</span><span class="p">).</span><span class="n">where</span><span class="p">(</span><span class="n">tas0</span><span class="o">&lt;</span><span class="mi">295</span><span class="p">).</span><span class="n">plot</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span> <span class="c1">#tas单一变量为温度，识别大于270华氏度和小于295华氏度的地方
+</span></code></pre></div></div>
+<p>可以应用于任何一年</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">tas0</span><span class="o">&gt;</span><span class="mi">270</span><span class="p">).</span><span class="n">where</span><span class="p">(</span><span class="n">tas0</span><span class="o">&lt;</span><span class="mi">295</span><span class="p">).</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+</code></pre></div></div>
+<p>也可以应用于坐标，此处where有点像if
+ <strong>fills the masked areas with missing values.</strong>（如下，除标识出的大于25纬度外，其余用XX填充）</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">tas0</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">tas0</span><span class="p">.</span><span class="n">lat</span><span class="o">&gt;</span><span class="mi">25</span><span class="p">,</span> <span class="mi">240</span><span class="p">).</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="c1">#25纬度以上
+</span><span class="n">tas0</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">tas0</span><span class="p">.</span><span class="n">lat</span><span class="o">&gt;</span><span class="mi">25</span><span class="p">,</span> <span class="n">tas</span><span class="p">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">6</span><span class="p">)).</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>利用土地比例数据来只显示陆地气温</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">landfrac</span>
+<span class="n">tas</span><span class="p">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">).</span><span class="n">where</span><span class="p">(</span><span class="n">landfrac</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">).</span><span class="n">plot</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>利用土地比例数据来区分陆地和海洋温升</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tas_anom_yearly</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">landfrac</span><span class="o">==</span><span class="mi">0</span><span class="p">).</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="s">'lat'</span><span class="p">,</span><span class="s">'lon'</span><span class="p">)).</span><span class="n">plot</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">'Ocean only'</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
+<span class="n">tas_anom_yearly</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">landfrac</span><span class="o">&gt;</span><span class="p">).</span><span class="n">mean</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="s">'lat'</span><span class="p">,</span><span class="s">'lon'</span><span class="p">)).</span><span class="n">plot</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s">'Land only'</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">)</span>
+</code></pre></div></div>
+<h3 id="opening-multiple-files-as-a-single-dataset">Opening multiple files as a single dataset</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">files</span> <span class="o">=</span> <span class="p">[</span><span class="s">'tas_day_ACCESS1-3_historical_r1i1p1_18500101-18741231.nc'</span><span class="p">,</span> 
+        <span class="s">'tas_day_ACCESS1-3_historical_r1i1p1_18750101-18991231.nc'</span><span class="p">,</span>
+        <span class="s">'tas_day_ACCESS1-3_historical_r1i1p1_19000101-19241231.nc'</span><span class="p">]</span>
+<span class="n">prefix</span> <span class="o">=</span> <span class="s">'http://dapds00.nci.org.au/thredds/dodsC/rr3/CMIP5/output1/CSIRO-BOM/ACCESS1-3/historical/day/atmos/day/r1i1p1/latest/tas/'</span>
+<span class="n">urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">prefix</span><span class="o">+</span><span class="nb">file</span> <span class="k">for</span> <span class="nb">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+<span class="n">urls</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="p">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">urls</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>#python #xarray #netCDF</p>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fas fa-folder"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#python">python</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fas fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#gis">gis</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#geopandas">geopandas</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#netcdf">netcdf</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#xarray">xarray</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#%E5%8F%AF%E8%A7%86%E5%8C%96">可视化</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/python/2020/10/19/Multiprocess%E5%AD%A6%E4%B9%A0.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fas fa-arrow-left"></i> Multiprocessing学习笔记
+
+          </span>
+        </a>
+      
+
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2020&nbsp;-&nbsp;2021 Chen Huang; All rights reserved.</p>
+      
+    </div>
+    <p>
+      Powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://github.com/ngzhio/jekyll-theme-hamilton">Hamilton</a>
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A technical blog for writing and note-taking.</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

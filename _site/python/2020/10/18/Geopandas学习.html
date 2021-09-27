@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Geopandas学习笔记 | Chen Huang’ Blog</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Geopandas学习笔记" />
+<meta name="author" content="Chen Huang" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="引言 最近学习了Geopandas的一些基本理念和操作。此文章是为我的学习记录。Geopandas起源于Pandas，也同时整合了许多其他依赖包的功能。目前来看，Geopandas的功能能够初步满足我对数据分析的地理化呈现的基本要求。" />
+<meta property="og:description" content="引言 最近学习了Geopandas的一些基本理念和操作。此文章是为我的学习记录。Geopandas起源于Pandas，也同时整合了许多其他依赖包的功能。目前来看，Geopandas的功能能够初步满足我对数据分析的地理化呈现的基本要求。" />
+<meta property="og:site_name" content="Chen Huang’ Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-10-18T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Geopandas学习笔记" />
+<meta name="twitter:site" content="@ChenHuangPolicy" />
+<meta name="twitter:creator" content="@Chen Huang" />
+<script type="application/ld+json">
+{"url":"/python/2020/10/18/Geopandas%E5%AD%A6%E4%B9%A0.html","mainEntityOfPage":{"@type":"WebPage","@id":"/python/2020/10/18/Geopandas%E5%AD%A6%E4%B9%A0.html"},"author":{"@type":"Person","name":"Chen Huang"},"datePublished":"2020-10-18T00:00:00+08:00","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Chen Huang"},"description":"引言 最近学习了Geopandas的一些基本理念和操作。此文章是为我的学习记录。Geopandas起源于Pandas，也同时整合了许多其他依赖包的功能。目前来看，Geopandas的功能能够初步满足我对数据分析的地理化呈现的基本要求。","headline":"Geopandas学习笔记","dateModified":"2020-10-18T00:00:00+08:00","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chen Huang&apos; Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+<!-- End selecting skin -->
+
+<script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+
+
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="far fa-user"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Chen Huang&#39; Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/years/">Years</a></li>
+            
+              <li><a class="" href="/categories/">Categories</a></li>
+            
+              <li><a class="" href="/tags/">Tags</a></li>
+            
+              <li><a class="" href="/donate/">Donate</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/faq/">FAQ</a>
+                    <a class="" href="/docs/">Docs</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <h3 class="toc-title">Table of Contents</h3>
+<nav class="toc-nav">
+  <ul class="toc">
+  <li><a href="#引言">引言</a></li>
+  <li><a href="#基本功能与语法">基本功能与语法</a>
+    <ul>
+      <li><a href="#geopandas的引入">Geopandas的引入</a></li>
+      <li><a href="#geopandas的数据读取">Geopandas的数据读取</a></li>
+      <li><a href="#初步绘图">初步绘图</a></li>
+    </ul>
+  </li>
+  <li><a href="#polygon和point的合并">Polygon和Point的合并</a>
+    <ul>
+      <li><a href="#点与面的合并">点与面的合并</a></li>
+      <li><a href="#面与点的合并">面与点的合并</a></li>
+      <li><a href="#统计简化和绘图">统计、简化和绘图</a></li>
+    </ul>
+  </li>
+</ul>
+
+</nav>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">Geopandas学习笔记</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2020-10-18T00:00:00+08:00" itemprop="datePublished">
+        Oct 18, 2020
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Chen Huang</span></span></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h2 id="引言">引言</h2>
+<p>最近学习了Geopandas的一些基本理念和操作。此文章是为我的学习记录。Geopandas起源于Pandas，也同时整合了许多其他依赖包的功能。目前来看，Geopandas的功能能够初步满足我对数据分析的地理化呈现的基本要求。</p>
+
+<h2 id="基本功能与语法">基本功能与语法</h2>
+<h3 id="geopandas的引入">Geopandas的引入</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span> 
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="n">gpd</span>
+<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Point</span><span class="p">,</span> <span class="n">Polygon</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+</code></pre></div></div>
+
+<h3 id="geopandas的数据读取">Geopandas的数据读取</h3>
+<h4 id="shapefile文件读取">Shapefile文件读取</h4>
+<p>Geopandas能够直接读取shapefile文件，此处我以中国基础地图数据为例</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pro</span> <span class="o">=</span> <span class="n">gpd</span><span class="p">.</span><span class="n">read_file</span><span class="p">(</span><span class="s">'/Users/chen/Desktop/中国基础地图数据/中国行政区.shp'</span><span class="p">)</span> 
+<span class="n">pro</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+<p>head集数据包含了省份名称和最重要的geometry列数据</p>
+<h4 id="csv文件读取">CSV文件读取</h4>
+<p>此处我们以中国电厂数据库为例，首先需要用pandas读取csv文件：</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pwplant</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'/users/chen/Onedrive/Economic data/global_power_plant_database.csv'</span><span class="p">)</span>
+<span class="n">pw_china</span> <span class="o">=</span> <span class="n">pwplant</span><span class="p">[</span><span class="n">pwplant</span><span class="p">.</span><span class="n">country_long</span><span class="o">==</span><span class="s">'China'</span><span class="p">]</span> <span class="c1">#选出中国数据
+</span><span class="n">point_with_cap</span> <span class="o">=</span> <span class="n">pw_china</span><span class="p">[[</span><span class="s">'latitude'</span><span class="p">,</span><span class="s">'longitude'</span><span class="p">,</span><span class="s">'capacity_mw'</span><span class="p">]]</span> <span class="c1">#读取其中的经纬度和容量数据
+</span><span class="n">point_withcap</span><span class="p">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">drop</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">point</span> <span class="o">=</span> <span class="n">point_with_cap</span><span class="p">.</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">Point</span><span class="p">(</span><span class="n">row</span><span class="p">.</span><span class="n">longitude</span><span class="p">,</span><span class="n">row</span><span class="p">.</span><span class="n">latitude</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#以列为方向，使用shapely的Point类将经纬度转换为point点
+</span><span class="n">powerplants</span> <span class="o">=</span> <span class="n">gpd</span><span class="p">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">point_with_cap</span><span class="p">,</span><span class="n">geometry</span> <span class="o">=</span> <span class="n">point</span><span class="p">)</span> <span class="c1">#直到此处才转为Geopandas数据集
+</span></code></pre></div></div>
+<h4 id="crs参考坐标系统">CRS参考坐标系统</h4>
+<p>参考坐标系统是每一套地理数据的标准，如果两套地理数据的CRS不同，那么二者是无法合并和比较的。比较常用的CRS标准为 epsg 4326
+这里我们将读取的火电厂数据的crs默认值改为4326</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">powerplants</span><span class="p">.</span><span class="n">crs</span> <span class="o">=</span> <span class="p">{</span><span class="s">'init'</span><span class="p">:</span><span class="s">'epsg:4326'</span><span class="p">}</span>
+</code></pre></div></div>
+<h3 id="初步绘图">初步绘图</h3>
+<p>在此我绘制四个子图例子</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">))</span>
+<span class="n">fig_spec</span> <span class="o">=</span> <span class="n">fig</span><span class="p">.</span><span class="n">add_gridspec</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">ncols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">width_ratios</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="c1">#一个幕布下的四块，我很喜欢的子图切割方式
+</span><span class="n">ax0</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">fig_spec</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">fig_spec</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">fig_spec</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">ax3</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">fig_spec</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">pro</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax0</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s">'grey'</span><span class="p">,</span><span class="n">edgecolor</span><span class="o">=</span><span class="s">'white'</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">pro</span><span class="p">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">4326</span><span class="p">).</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s">'Reds'</span><span class="p">)</span>
+<span class="n">powerplants</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s">'green'</span><span class="p">,</span><span class="n">markersize</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">powerplants</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax3</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s">'blue'</span><span class="p">,</span><span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div></div>
+<p>如果运行正常，将如图所示
+<img src="/assets/plants_subplot.jpg" alt="四个子图" /></p>
+
+<h2 id="polygon和point的合并">Polygon和Point的合并</h2>
+<p>根据之前我们之前的Shapefile文件和CSV文件的导入，以及使用Geopandas和Pandas的预处理（如经纬度转为Point，CRS转换工作等），我们现在可以开展面数据和点数据的合并工作了。这里我们将使用Geopandas中的 <strong>sjoin</strong> 函数</p>
+<h3 id="点与面的合并">点与面的合并</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plants_with_pro</span> <span class="o">=</span> <span class="n">gpd</span><span class="p">.</span><span class="n">sjoin</span><span class="p">(</span><span class="n">powerplants</span><span class="p">,</span><span class="n">pro</span><span class="p">,</span><span class="n">how</span><span class="o">=</span><span class="s">'inner'</span><span class="p">,</span><span class="n">op</span><span class="o">=</span><span class="s">'within'</span><span class="p">)</span> <span class="c1">#注意此处使用within
+</span><span class="n">plants_with_pro</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+<h3 id="面与点的合并">面与点的合并</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pro_with_plants</span> <span class="o">=</span> <span class="n">gpd</span><span class="p">.</span><span class="n">sjoin</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="n">powerplants</span><span class="p">,</span><span class="n">how</span><span class="o">=</span><span class="s">'inner'</span><span class="p">,</span><span class="n">op</span><span class="o">=</span><span class="s">'contains'</span><span class="p">)</span> <span class="c1">#注意此处使用contains
+</span><span class="n">pro_with_plants</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+<h3 id="统计简化和绘图">统计、简化和绘图</h3>
+<p>正常的话，以上两种合并方式所获得的数据规模应该是一样的</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">print</span><span class="p">(</span><span class="n">plants_with_pro</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">pro_with_plants</span><span class="p">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre></div></div>
+<p>我本人所显示的是(2938,15)
+在绘图之前，我们可能会想到一个问题，那就是我们可能需要2900多个点绘制，但是我们不需要这么多次的面绘制。这里就需要对所合并数据集进行简化。以一个省份的电厂数量为例，我们进行数据简化和绘图。</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plants_counts</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">pro_with_plants</span><span class="p">[</span><span class="s">'NAME'</span><span class="p">].</span><span class="n">value_counts</span><span class="p">())</span> <span class="c1">#统计每个省份的电厂数量
+</span><span class="n">plants_counts</span><span class="p">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">plants_counts</span><span class="p">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre></div></div>
+<p>显示的结果应该为：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"> </th>
+      <th style="text-align: center">index</th>
+      <th style="text-align: center">NAME</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">内蒙古</td>
+      <td style="text-align: center">295</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">四川</td>
+      <td style="text-align: center">228</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">云南</td>
+      <td style="text-align: center">212</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">山东</td>
+      <td style="text-align: center">159</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">4</td>
+      <td style="text-align: center">新疆</td>
+      <td style="text-align: center">148</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">plants_counts</span><span class="p">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s">'index'</span><span class="p">:</span><span class="s">'name'</span><span class="p">,</span><span class="s">'NAME'</span><span class="p">:</span><span class="s">'plants_num'</span><span class="p">},</span><span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span> <span class="c1">#这里改一下列名
+</span></code></pre></div></div>
+<p>至此为止，合并数据集已经发挥了它的全部使命，即将电厂与省份匹配然后计算每一省份的电厂数量。
+接下来，需要的是将统计好的数量数据与原有 <strong>pro</strong> 对象合并</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pro</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">merge</span><span class="p">(</span><span class="n">pro</span><span class="p">,</span><span class="n">plants_counts</span><span class="p">,</span><span class="n">left_on</span><span class="o">=</span><span class="s">'NAME'</span><span class="p">,</span><span class="n">right_on</span><span class="o">=</span><span class="s">'name'</span><span class="p">,</span><span class="n">how</span><span class="o">=</span><span class="s">'outer'</span><span class="p">).</span><span class="n">drop</span><span class="p">(</span><span class="s">'name'</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#此处的pandas数据合并值得铭记，这里不加how声明，将会漏掉我国台湾省地区
+</span><span class="n">pro</span><span class="p">.</span><span class="n">head</span><span class="p">()</span> 
+<span class="nb">type</span><span class="p">(</span><span class="n">pro</span><span class="p">)</span> <span class="c1">#这里的pro依然还是geopandas数据，尽管经历了pandas的处理，这也说明二者的同源性
+</span></code></pre></div></div>
+<p>这里我们跳过列名重命名过程，直到这里，我们就可以绘制一个反应各地区电厂数量差异的地图了。</p>
+
+<p><img src="/assets/pro_with_plants_counts.jpg" alt="各省份电厂数量" /></p>
+
+<p>这是我第一篇学习笔记，写了大概一小时，接下来会记录python多进程运行的笔记</p>
+
+  </div>
+
+  <footer class="post-footer">
+    
+      <div class="post-meta">
+        <i class="fas fa-folder"></i>
+        <ul class="post-taxonomies post-categories">
+          
+          
+            <li class="post-category">
+              
+              <a href="/categories/#python">python</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    
+      <div class="post-meta">
+        <i class="fas fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#gis">gis</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#geopandas">geopandas</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#%E5%8F%AF%E8%A7%86%E5%8C%96">可视化</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+
+      
+        <a class="post-next" href="/python/2020/10/19/Multiprocess%E5%AD%A6%E4%B9%A0.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            Multiprocessing学习笔记
+ <i class="fas fa-arrow-right"></i>
+          </span>
+        </a>
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2020&nbsp;-&nbsp;2021 Chen Huang; All rights reserved.</p>
+      
+    </div>
+    <p>
+      Powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://github.com/ngzhio/jekyll-theme-hamilton">Hamilton</a>
+    </p>
+  </div>
+
+  <div class="footer-col">
+    <p>A technical blog for writing and note-taking.</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>
