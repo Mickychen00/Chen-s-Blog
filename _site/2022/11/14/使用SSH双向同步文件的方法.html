@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>使用SSH双向同步文件的方法 | Chen Huang’ Blog</title>
+<meta name="generator" content="Jekyll v3.9.2" />
+<meta property="og:title" content="使用SSH双向同步文件的方法" />
+<meta name="author" content="Chen Huang" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="由于目前坚果云对LEEEP服务器端的支持有限，在此介绍基于SSH服务的文件双向同步模式，可以使指定PC与服务器端的双向同步。" />
+<meta property="og:description" content="由于目前坚果云对LEEEP服务器端的支持有限，在此介绍基于SSH服务的文件双向同步模式，可以使指定PC与服务器端的双向同步。" />
+<link rel="canonical" href="http://localhost:4000/2022/11/14/%E4%BD%BF%E7%94%A8SSH%E5%8F%8C%E5%90%91%E5%90%8C%E6%AD%A5%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E6%B3%95.html" />
+<meta property="og:url" content="http://localhost:4000/2022/11/14/%E4%BD%BF%E7%94%A8SSH%E5%8F%8C%E5%90%91%E5%90%8C%E6%AD%A5%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E6%B3%95.html" />
+<meta property="og:site_name" content="Chen Huang’ Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-11-14T00:00:00+08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="使用SSH双向同步文件的方法" />
+<meta name="twitter:site" content="@ChenHuangPolicy" />
+<meta name="twitter:creator" content="@Chen Huang" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chen Huang"},"dateModified":"2022-11-14T00:00:00+08:00","datePublished":"2022-11-14T00:00:00+08:00","description":"由于目前坚果云对LEEEP服务器端的支持有限，在此介绍基于SSH服务的文件双向同步模式，可以使指定PC与服务器端的双向同步。","headline":"使用SSH双向同步文件的方法","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2022/11/14/%E4%BD%BF%E7%94%A8SSH%E5%8F%8C%E5%90%91%E5%90%8C%E6%AD%A5%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E6%B3%95.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/logo.png"},"name":"Chen Huang"},"url":"http://localhost:4000/2022/11/14/%E4%BD%BF%E7%94%A8SSH%E5%8F%8C%E5%90%91%E5%90%8C%E6%AD%A5%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E6%B3%95.html"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Chen Huang&apos; Blog" />
+
+
+
+
+
+<!-- Google Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open%20Sans|Roboto|Roboto%20Slab|Inconsolata|Dancing%20Script|Noto%20Sans%20SC|Noto%20Sans%20TC|Noto%20Serif%20SC|Noto%20Serif%20TC|Ma%20Shan%20Zheng">
+
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/skin.css">
+
+<!-- Begin selecting skin -->
+
+<!-- End selecting skin -->
+
+<script async src="https://use.fontawesome.com/releases/v5.0.12/js/all.js"></script>
+
+
+
+
+  </head>
+
+  <body>
+    <div class="site-container">
+      <header class="site-header">
+        <div class="wrapper">
+  <script>
+    function clickSidebarButton() {
+      const elem = document.getElementById("site-sidebar")
+      if (elem.style.display == "none" || elem.style.display == "") {
+        elem.style.display = "block";
+      } else {
+        elem.style.display = "none";
+      }
+    }
+  </script>
+  <a class="site-sidebar-button" onclick="clickSidebarButton()"><i class="far fa-user"></i>
+  </a>
+
+  <a class="site-title" rel="author" href="/">Chen Huang&#39; Blog</a>
+
+  
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger" title="nav-trigger">
+        <span class="menu-icon">
+          <svg viewBox="0 0 18 15" width="18px" height="15px">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <ul class="trigger">
+              <li><a class="" href="/about/">About</a></li>
+            
+              <li><a class="" href="/years/">Years</a></li>
+            
+              <li><a class="" href="/categories/">Categories</a></li>
+            
+              <li><a class="" href="/tags/">Tags</a></li>
+            
+              <li><a class="" href="/donate/">Donate</a></li>
+            
+              <li class="dropdown" href="#">
+                <a href="javascript:void(0)" class="dropbtn">More</a>
+                <div class="dropdown-content">
+                    <a class="" href="/faq/">FAQ</a>
+                    <a class="" href="/docs/">Docs</a>
+                </div>
+              </li>
+            </ul>
+    </nav>
+  
+</div>
+
+      </header>
+      
+      <div class="site-body wrapper">
+        <aside class="site-sidebar" id="site-sidebar">
+          
+            <h3 class="toc-title">Table of Contents</h3>
+<nav class="toc-nav">
+  <ul class="toc">
+  <li><a href="#服务端软件">服务端软件：</a></li>
+  <li><a href="#pc端软件">PC端软件：</a></li>
+  <li><a href="#步骤一服务器端openssh服务配置-已配置完毕">步骤一：服务器端OpenSSH服务配置 (已配置完毕)</a></li>
+  <li><a href="#步骤二pc端生成sshkey">步骤二：PC端生成sshkey</a></li>
+  <li><a href="#步骤三公钥授权">步骤三：公钥授权</a></li>
+  <li><a href="#连接测试">连接测试</a></li>
+  <li><a href="#正式连接">正式连接</a></li>
+  <li><a href="#单向同步常用">单向同步（常用）</a></li>
+  <li><a href="#双向同步不常用">双向同步（不常用）</a></li>
+</ul>
+
+</nav>
+
+          
+        </aside>
+        <main class="site-main" id="site-main" aria-label="Content">
+          <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+
+    <h1 class="post-title p-name" itemprop="name headline">使用SSH双向同步文件的方法</h1>
+    <p class="post-meta"><time class="dt-published" datetime="2022-11-14T00:00:00+08:00" itemprop="datePublished">
+        Nov 14, 2022
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Chen Huang</span></span></p>
+
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>由于目前坚果云对LEEEP服务器端的支持有限，在此介绍基于SSH服务的文件双向同步模式，可以使指定PC与服务器端的双向同步。</p>
+
+<p>&lt;-more-&gt;</p>
+
+<h3 id="服务端软件">服务端软件：</h3>
+<ul>
+  <li>OpenSSH：提供SSH接口服务（已提前配置）</li>
+  <li>Powershell：用于设置SSHkey和测试链接</li>
+</ul>
+
+<h3 id="pc端软件">PC端软件：</h3>
+<ul>
+  <li>Powershell：用于设置SSHkey和测试链接</li>
+  <li>WinScp：用于实现PC端与服务端的文件夹对应和同步监控</li>
+</ul>
+
+<hr />
+<h2 id="sshkey配置">SSHkey配置</h2>
+<h3 id="步骤一服务器端openssh服务配置-已配置完毕">步骤一：服务器端OpenSSH服务配置 (已配置完毕)</h3>
+<p>通过与马腾、吴雅珍、肖逸龙三位同学的沟通，黄晨已在TEC、CGE和线上模型三台服务器上配置好OpenSSH初始服务。此处不再赘述，相关配置教程可以参照：<a href="https://www.hostwinds.com/tutorials/how-to-install-and-configure-openssh-windows-server-2016">How to Install and Configure OpenSSH</a>和<a href="https://blog.csdn.net/RobinZZX/article/details/124070198?spm=1001.2101.3001.6650.1&amp;depth_1-utm_relevant_index=2">Windows之间使用OpenSSH的ssh免密登录</a>两份参考资料。</p>
+
+<h3 id="步骤二pc端生成sshkey">步骤二：PC端生成sshkey</h3>
+<ul>
+  <li>Win+Q搜索Windows PowerShell，运行
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen -t rsa
+</code></pre></div>    </div>
+    <p>若出现提示，可多次回车选择默认选项。此时将在“C:\Users\Administrator.ssh”文件夹下生成两个文件”id_rsa”和”id_rsa.pub”，前者为私钥，后者为公钥。</p>
+  </li>
+</ul>
+
+<h3 id="步骤三公钥授权">步骤三：公钥授权</h3>
+<p>在服务端打开PowerShell（若是管理员身份，则以管理员身份运行），进入用户文件夹（管理员：”C:\Users\Administrator”；非管理员：”C:\Users\指定用户名”），输入如下命令：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir .ssh # 新建.ssh文件夹（若存在则忽略）
+cd .ssh # 进入.ssh文件夹
+New-Item authorized_keys # 创建authorized_keys文件，若存在则忽略
+</code></pre></div></div>
+<p>将PC端的id_rsa.pub文件内容粘贴到服务端authorized_keys文件中。（注：如果已存在其他用户的公钥内容，注意换行添加即可，勿删除此前内容）</p>
+
+<hr />
+
+<h2 id="连接">连接</h2>
+<h3 id="连接测试">连接测试</h3>
+<p>在PC端PowerShell软件中输入</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -p 2233 用户名@IP地址 # 此时无需密码直接登录说明正常，首次登陆会提示是否加入know_hosts，输入yes即可
+</code></pre></div></div>
+<p>注：此处端口号填写2233（OpenSSH配置端口，黄晨设置）</p>
+
+<h3 id="正式连接">正式连接</h3>
+<ol>
+  <li>下载、安装、打开WinSCP软件</li>
+  <li>新建链接
+<img src="https://chen-1300607714.cos.ap-shanghai.myqcloud.com/%E5%9B%BE%E5%BA%8A/202211131400877.png" alt="" />
+    <ul>
+      <li>进入Advanced-Authentication-Private key file，选择此前生成id_rsa文件的文件夹
+<img src="https://chen-1300607714.cos.ap-shanghai.myqcloud.com/%E5%9B%BE%E5%BA%8A/202211131400225.png" alt="" /></li>
+    </ul>
+  </li>
+</ol>
+
+<p><img src="https://chen-1300607714.cos.ap-shanghai.myqcloud.com/%E5%9B%BE%E5%BA%8A/202211131403855.png" alt="" /></p>
+<ul>
+  <li>打开id_rsa后会弹出下面界面，依次选择OK-保存-OK-OK
+<img src="https://chen-1300607714.cos.ap-shanghai.myqcloud.com/%E5%9B%BE%E5%BA%8A/202211131403131.png" alt="" /></li>
+  <li>点击Login（可以选择Save来保存这一配置，免得下次重新配置）
+连接成功后会右侧出现远程服务器的文件夹，即连接成功。
+<img src="https://chen-1300607714.cos.ap-shanghai.myqcloud.com/%E5%9B%BE%E5%BA%8A/202211131406489.png" alt="" /></li>
+</ul>
+
+<hr />
+
+<h2 id="同步示例">同步示例</h2>
+<h3 id="单向同步常用">单向同步（常用）</h3>
+<p>此处利用PC端的SSHtest和服务端的SSHtest文件夹演示
+点选如下服务端同步模块，并依次设置
+<img src="https://chen-1300607714.cos.ap-shanghai.myqcloud.com/%E5%9B%BE%E5%BA%8A/202211131416905.png" alt="" /></p>
+
+<p><img src="https://chen-1300607714.cos.ap-shanghai.myqcloud.com/%E5%9B%BE%E5%BA%8A/202211131420736.png" alt="" />
+<strong>注意：服务端的路径起始处有”/”</strong></p>
+
+<p><img src="https://chen-1300607714.cos.ap-shanghai.myqcloud.com/%E5%9B%BE%E5%BA%8A/202211131418554.png" alt="" /></p>
+
+<ul>
+  <li>如此，单向同步设置完毕，PC端出现文件变动，都会同步更新到服务端。由此便可实现一个本地<strong>坚果云类似服务</strong>。
+<img src="https://chen-1300607714.cos.ap-shanghai.myqcloud.com/%E5%9B%BE%E5%BA%8A/202211131430614.png" alt="" /></li>
+</ul>
+
+<h3 id="双向同步不常用">双向同步（不常用）</h3>
+<ul>
+  <li>利用Synchronize模块实现双向同步
+<img src="https://chen-1300607714.cos.ap-shanghai.myqcloud.com/%E5%9B%BE%E5%BA%8A/202211131410388.png" alt="" /></li>
+  <li>利用PC端的SSHtest和服务端的SSHtest文件夹演示
+此处选择了双向同步并预览变动，选择OK。实际使用时可按自身需求选择单向或双向同步。
+<img src="https://chen-1300607714.cos.ap-shanghai.myqcloud.com/%E5%9B%BE%E5%BA%8A/202211131412986.png" alt="" /></li>
+</ul>
+
+<hr />
+
+<h2 id="总结">总结</h2>
+<p>本文是针对SSH服务的SFTP软件应用，以达成类似的坚果云自动同步效果，避免人为手动同步带来的时间成本和潜在失误。
+其实除了WinSCP软件，还有很多支持SFTP的软件。例如，利用VS Code及其STFP插件也可以实现类似功能。但由于LEEEP服务器是Windows版本，VS Code需要的相关权限高于WinSCP，需要许多额外的配置。而WinSCP的功能已基本满足工作需求，因此本文不再阐述其他软件的应用方法，针对VS Code在Windows服务器端的远程权限问题，可见该<a href="https://github.com/microsoft/vscode-remote-release/issues/2648">Github ISSUE</a> 。</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    
+
+    
+      <div class="post-meta">
+        <i class="fas fa-tags"></i>
+        <ul class="post-taxonomies post-tags">
+          
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#sftp">sftp</a>
+            </li>
+          
+            <li class="post-tag">
+              
+              <a href="/tags/#ssh">ssh</a>
+            </li>
+          
+        </ul>
+      </div>
+    
+
+    <nav class="post-pagination" role="navigation">
+      
+        <a class="post-previous" href="/python/2021/02/21/xarray%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html">
+          <h4 class="post-pagination-label">Prev</h4>
+          <span class="post-pagination-title">
+            <i class="fas fa-arrow-left"></i> xarray学习笔记
+
+          </span>
+        </a>
+      
+
+      
+    </nav>
+  </footer>
+
+  
+  
+</article>
+
+          <footer class="site-footer">
+            <div class="footer-col-wrapper">
+
+  <div class="footer-col">
+    <div class="copyright">
+      
+      
+      
+      
+      <p>Copyright © 2020&nbsp;-&nbsp;2022 Chen Huang; All rights reserved.</p>
+      
+      
+    </div>
+    <p>
+      Powered by <a href="https://jekyllrb.com/">Jekyll</a> & <a href="https://github.com/ngzhio/jekyll-theme-hamilton">Hamilton</a>
+    </p>
+    <p><a href="https://beian.miit.gov.cn" target="_blank">蒙ICP备2021004144号</a></p>
+  </div>
+
+  <div class="footer-col">
+    <p>A technical blog for writing and note-taking.</p>
+  </div>
+</div>
+
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+
+</html>

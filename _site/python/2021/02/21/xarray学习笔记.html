@@ -6,14 +6,16 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Begin Jekyll SEO tag v2.6.1 -->
+<!-- Begin Jekyll SEO tag v2.8.0 -->
 <title>xarray学习笔记 | Chen Huang’ Blog</title>
-<meta name="generator" content="Jekyll v3.9.0" />
+<meta name="generator" content="Jekyll v3.9.2" />
 <meta property="og:title" content="xarray学习笔记" />
 <meta name="author" content="Chen Huang" />
 <meta property="og:locale" content="en" />
-<meta name="description" content="xarray 用法 类似软件Iris xarray: N-D labeled arrays and datasets in Python" />
-<meta property="og:description" content="xarray 用法 类似软件Iris xarray: N-D labeled arrays and datasets in Python" />
+<meta name="description" content="xarray notes 类似软件Iris" />
+<meta property="og:description" content="xarray notes 类似软件Iris" />
+<link rel="canonical" href="http://localhost:4000/python/2021/02/21/xarray%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html" />
+<meta property="og:url" content="http://localhost:4000/python/2021/02/21/xarray%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html" />
 <meta property="og:site_name" content="Chen Huang’ Blog" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2021-02-21T00:00:00+08:00" />
@@ -22,11 +24,11 @@
 <meta name="twitter:site" content="@ChenHuangPolicy" />
 <meta name="twitter:creator" content="@Chen Huang" />
 <script type="application/ld+json">
-{"url":"/python/2021/02/21/xarray%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html","mainEntityOfPage":{"@type":"WebPage","@id":"/python/2021/02/21/xarray%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html"},"author":{"@type":"Person","name":"Chen Huang"},"datePublished":"2021-02-21T00:00:00+08:00","@type":"BlogPosting","publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"/logo.png"},"name":"Chen Huang"},"description":"xarray 用法 类似软件Iris xarray: N-D labeled arrays and datasets in Python","headline":"xarray学习笔记","dateModified":"2021-02-21T00:00:00+08:00","@context":"https://schema.org"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Chen Huang"},"dateModified":"2021-02-21T00:00:00+08:00","datePublished":"2021-02-21T00:00:00+08:00","description":"xarray notes 类似软件Iris","headline":"xarray学习笔记","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/python/2021/02/21/xarray%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/logo.png"},"name":"Chen Huang"},"url":"http://localhost:4000/python/2021/02/21/xarray%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0.html"}</script>
 <!-- End Jekyll SEO tag -->
 
 
-<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Chen Huang&apos; Blog" />
+<link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Chen Huang&apos; Blog" />
 
 
 
@@ -111,113 +113,71 @@
 <nav class="toc-nav">
   <ul class="toc">
   <li><a href="#xarray-n-d-labeled-arrays-and-datasets-in-python">xarray: N-D labeled arrays and datasets in Python</a></li>
-  <li><a href="#why-xarray">Why xarray?</a>
-    <ul>
-      <li><a href="#what-labels-enable">What labels enable</a></li>
-      <li><a href="#core-data-structures">Core data structures</a></li>
-    </ul>
-  </li>
-  <li><a href="#quick-overview">Quick overview</a>
-    <ul>
-      <li><a href="#create-dataarray">Create DataArray</a></li>
-      <li><a href="#indexing">Indexing</a></li>
-      <li><a href="#attributes">Attributes</a></li>
-      <li><a href="#computation">Computation</a></li>
-      <li><a href="#groupby">Groupby</a></li>
-      <li><a href="#plotting">Plotting</a></li>
-      <li><a href="#pandas">pandas</a></li>
-      <li><a href="#datasets">Datasets</a></li>
-      <li><a href="#read-write-netcdf-files">Read&amp; write netCDF files</a></li>
-    </ul>
-  </li>
-  <li><a href="#terminology">Terminology</a>
-    <ul>
-      <li><a href="#dataarray">DataArray</a></li>
-      <li><a href="#dataset">Dataset</a></li>
-      <li><a href="#variable">Variable</a></li>
-      <li><a href="#dimension">Dimension</a></li>
-      <li><a href="#coordinate">Coordinate</a></li>
-      <li><a href="#dimension-coordinate">Dimension coordinate</a></li>
-      <li><a href="#index">Index</a></li>
-      <li><a href="#name">name</a></li>
-      <li><a href="#scalar">scalar</a></li>
-      <li><a href="#duck-array">duck array</a></li>
-    </ul>
-  </li>
-  <li><a href="#data-structures">Data structures</a>
-    <ul>
-      <li><a href="#dataarray-1">DataArray</a></li>
-      <li><a href="#dataset-1">Dataset</a></li>
-      <li><a href="#coordinates">Coordinates</a></li>
-    </ul>
-  </li>
-  <li><a href="#indexing-and-selecting-data">Indexing and selecting data</a>
-    <ul>
-      <li><a href="#positional-indexing">Positional indexing</a></li>
-      <li><a href="#indexing-with-dimension-names">Indexing with dimension names</a></li>
-      <li><a href="#nearest-neighbor-lookups">Nearest neighbor lookups</a></li>
-      <li><a href="#dataset-indexing">Dataset indexing</a></li>
-      <li><a href="#dropping-labels-and-dimensions">Dropping labels and dimensions</a></li>
-      <li><a href="#masking-with-where">Masking with where</a></li>
-      <li><a href="#selecting-values-with-isin">Selecting values with isin</a></li>
-      <li><a href="#vectorized-indexing-比较难的一节">Vectorized Indexing (比较难的一节)</a></li>
-      <li><a href="#assigning-values-with-indexing">Assigning values with indexing</a></li>
-      <li><a href="#more-advanced-indexing">More advanced indexing</a></li>
-      <li><a href="#align-and-reindex">Align and reindex</a></li>
-      <li><a href="#missing-coordinate-labels">Missing coordinate labels</a></li>
-      <li><a href="#underlying-indexes">Underlying Indexes</a></li>
-      <li><a href="#coples-vs-views">Coples vs. Views</a></li>
-      <li><a href="#multi-level-indexing">Multi-level indexing</a></li>
-      <li><a href="#indexing-rules">Indexing rules</a></li>
-    </ul>
-  </li>
-  <li><a href="#interpolating-data">Interpolating data</a>
-    <ul>
-      <li><a href="#scalar-and-1-dimensional-interpolation">Scalar and 1-dimensional interpolation</a></li>
-      <li><a href="#interpolation-methods">Interpolation methods</a></li>
-      <li><a href="#advanced-interpolation">Advanced Interpolation</a></li>
-      <li><a href="#interpolating-arrays-with-nan">Interpolating arrays with Nan</a></li>
-      <li><a href="#example">Example</a></li>
-    </ul>
-  </li>
-  <li><a href="#computation-1">Computation</a>
-    <ul>
-      <li><a href="#basic-array-math">Basic array math</a></li>
-      <li><a href="#misssing-values">Misssing values</a></li>
-      <li><a href="#aggregation">Aggregation</a></li>
-      <li><a href="#rolling-window-operations">Rolling window operations</a></li>
-      <li><a href="#weighted-array-reductions">Weighted array reductions</a></li>
-      <li><a href="#coarsen-large-arrays">Coarsen large arrays</a></li>
-      <li><a href="#computation-using-coordinates">Computation using Coordinates</a></li>
-      <li><a href="#fitting-polynomials">Fitting polynomials</a></li>
-      <li><a href="#broadcasting-by-dimension-name">Broadcasting by dimension name</a></li>
-      <li><a href="#automatic-alignment">Automatic alignment</a></li>
-      <li><a href="#coordinates-1">Coordinates</a></li>
-      <li><a href="#math-with-datasets">Math with datasets</a></li>
-      <li><a href="#wrapping-custon-computation">Wrapping custon computation</a></li>
-    </ul>
-  </li>
-  <li><a href="#groupby-split-apply-combine">Groupby: Split-apply-combine</a></li>
-  <li><a href="#reshaping-and-reorganizing-data">Reshaping and reorganizing data</a></li>
-  <li><a href="#combining-data">Combining data</a></li>
-  <li><a href="#time-series-data">Time series data</a></li>
-  <li><a href="#weather-and-climate-data">Weather and climate data</a></li>
-  <li><a href="#working-with-pandas">Working with pandas</a></li>
-  <li><a href="#reading-and-writing-file">Reading and writing file</a></li>
-  <li><a href="#parallel-computing-with-dask">Parallel computing with Dask</a></li>
-  <li><a href="#plotting-1">Plotting</a></li>
-  <li><a href="#working-with-numpy-like-arrays">Working with numpy-like arrays</a></li>
-  <li><a href="#basic-xarray-notebook">Basic xarray notebook</a>
-    <ul>
-      <li><a href="#reading-data-and-associated-metadata-from-a-netcdf-file-into-an-xarray-dataset">Reading data and associated metadata from a netCDF file into an xarray dataset</a></li>
-      <li><a href="#subsetting-a-dataset-by-time-and-space-slicing-and-dicing">Subsetting a dataset by time and space （Slicing and Dicing）</a></li>
-      <li><a href="#plotting-with-xarray">Plotting with xarray</a></li>
-      <li><a href="#calculating-metrics-eg-mean-maximum">Calculating metrics, e.g. mean, maximum</a></li>
-      <li><a href="#grouping-and-resampling-in-time">Grouping and resampling in time</a></li>
-      <li><a href="#masking">Masking</a></li>
-      <li><a href="#opening-multiple-files-as-a-single-dataset">Opening multiple files as a single dataset</a></li>
-    </ul>
-  </li>
+  <li><a href="#what-labels-enable">What labels enable</a></li>
+  <li><a href="#core-data-structures">Core data structures</a></li>
+  <li><a href="#create-dataarray">Create DataArray</a></li>
+  <li><a href="#indexing">Indexing</a></li>
+  <li><a href="#attributes">Attributes</a></li>
+  <li><a href="#computation">Computation</a></li>
+  <li><a href="#groupby">Groupby</a></li>
+  <li><a href="#plotting">Plotting</a></li>
+  <li><a href="#pandas">pandas</a></li>
+  <li><a href="#datasets">Datasets</a></li>
+  <li><a href="#read-write-netcdf-files">Read&amp; write netCDF files</a></li>
+  <li><a href="#dataarray">DataArray</a></li>
+  <li><a href="#dataset">Dataset</a></li>
+  <li><a href="#variable">Variable</a></li>
+  <li><a href="#dimension">Dimension</a></li>
+  <li><a href="#coordinate">Coordinate</a></li>
+  <li><a href="#dimension-coordinate">Dimension coordinate</a></li>
+  <li><a href="#index">Index</a></li>
+  <li><a href="#name">name</a></li>
+  <li><a href="#scalar">scalar</a></li>
+  <li><a href="#duck-array">duck array</a></li>
+  <li><a href="#dataarray-1">DataArray</a></li>
+  <li><a href="#dataset-1">Dataset</a></li>
+  <li><a href="#coordinates">Coordinates</a></li>
+  <li><a href="#positional-indexing">Positional indexing</a></li>
+  <li><a href="#indexing-with-dimension-names">Indexing with dimension names</a></li>
+  <li><a href="#nearest-neighbor-lookups">Nearest neighbor lookups</a></li>
+  <li><a href="#dataset-indexing">Dataset indexing</a></li>
+  <li><a href="#dropping-labels-and-dimensions">Dropping labels and dimensions</a></li>
+  <li><a href="#masking-with-where">Masking with where</a></li>
+  <li><a href="#selecting-values-with-isin">Selecting values with isin</a></li>
+  <li><a href="#vectorized-indexing-比较难的一节">Vectorized Indexing (比较难的一节)</a></li>
+  <li><a href="#assigning-values-with-indexing">Assigning values with indexing</a></li>
+  <li><a href="#more-advanced-indexing">More advanced indexing</a></li>
+  <li><a href="#align-and-reindex">Align and reindex</a></li>
+  <li><a href="#missing-coordinate-labels">Missing coordinate labels</a></li>
+  <li><a href="#underlying-indexes">Underlying Indexes</a></li>
+  <li><a href="#coples-vs-views">Coples vs. Views</a></li>
+  <li><a href="#multi-level-indexing">Multi-level indexing</a></li>
+  <li><a href="#indexing-rules">Indexing rules</a></li>
+  <li><a href="#scalar-and-1-dimensional-interpolation">Scalar and 1-dimensional interpolation</a></li>
+  <li><a href="#interpolation-methods">Interpolation methods</a></li>
+  <li><a href="#advanced-interpolation">Advanced Interpolation</a></li>
+  <li><a href="#interpolating-arrays-with-nan">Interpolating arrays with Nan</a></li>
+  <li><a href="#example">Example</a></li>
+  <li><a href="#basic-array-math">Basic array math</a></li>
+  <li><a href="#misssing-values">Misssing values</a></li>
+  <li><a href="#aggregation">Aggregation</a></li>
+  <li><a href="#rolling-window-operations">Rolling window operations</a></li>
+  <li><a href="#weighted-array-reductions">Weighted array reductions</a></li>
+  <li><a href="#coarsen-large-arrays">Coarsen large arrays</a></li>
+  <li><a href="#computation-using-coordinates">Computation using Coordinates</a></li>
+  <li><a href="#fitting-polynomials">Fitting polynomials</a></li>
+  <li><a href="#broadcasting-by-dimension-name">Broadcasting by dimension name</a></li>
+  <li><a href="#automatic-alignment">Automatic alignment</a></li>
+  <li><a href="#coordinates-1">Coordinates</a></li>
+  <li><a href="#math-with-datasets">Math with datasets</a></li>
+  <li><a href="#wrapping-custon-computation">Wrapping custon computation</a></li>
+  <li><a href="#reading-data-and-associated-metadata-from-a-netcdf-file-into-an-xarray-dataset">Reading data and associated metadata from a netCDF file into an xarray dataset</a></li>
+  <li><a href="#subsetting-a-dataset-by-time-and-space-slicing-and-dicing">Subsetting a dataset by time and space （Slicing and Dicing）</a></li>
+  <li><a href="#plotting-with-xarray">Plotting with xarray</a></li>
+  <li><a href="#calculating-metrics-eg-mean-maximum">Calculating metrics, e.g. mean, maximum</a></li>
+  <li><a href="#grouping-and-resampling-in-time">Grouping and resampling in time</a></li>
+  <li><a href="#masking">Masking</a></li>
+  <li><a href="#opening-multiple-files-as-a-single-dataset">Opening multiple files as a single dataset</a></li>
 </ul>
 
 </nav>
@@ -239,9 +199,12 @@
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <h1 id="xarray-用法">xarray 用法</h1>
-<p>类似软件<a href="https://scitools-iris.readthedocs.io/en/latest/index.html">Iris</a></p>
-<h2 id="xarray-n-d-labeled-arrays-and-datasets-in-python">xarray: N-D labeled arrays and datasets in Python</h2>
+    <p>xarray notes
+类似软件<a href="https://scitools-iris.readthedocs.io/en/latest/index.html">Iris</a></p>
+
+<p>&lt;-more-&gt;</p>
+
+<h3 id="xarray-n-d-labeled-arrays-and-datasets-in-python">xarray: N-D labeled arrays and datasets in Python</h3>
 
 <p><strong>xarray</strong> (formerly <strong>xray</strong>) is an open source project and Python package that makes working with labelled multi-dimensional arrays simple, efficient, and fun!</p>
 
@@ -1026,6 +989,14 @@ source: <a href="https://www.google.com/search?newwindow=1&amp;ei=fHYiYOLwCdGlkw
       
 
       
+        <a class="post-next" href="/2022/11/14/%E4%BD%BF%E7%94%A8SSH%E5%8F%8C%E5%90%91%E5%90%8C%E6%AD%A5%E6%96%87%E4%BB%B6%E7%9A%84%E6%96%B9%E6%B3%95.html">
+          <h4 class="post-pagination-label">Next</h4>
+          <span class="post-pagination-title">
+            使用SSH双向同步文件的方法
+ <i class="fas fa-arrow-right"></i>
+          </span>
+        </a>
+      
     </nav>
   </footer>
 
@@ -1042,7 +1013,7 @@ source: <a href="https://www.google.com/search?newwindow=1&amp;ei=fHYiYOLwCdGlkw
       
       
       
-      <p>Copyright © 2020&nbsp;-&nbsp;2021 Chen Huang; All rights reserved.</p>
+      <p>Copyright © 2020&nbsp;-&nbsp;2022 Chen Huang; All rights reserved.</p>
       
       
     </div>

@@ -7,9 +7,10 @@ tags: [并行, multiprocess,python]
 categories: python
 permalink: /:categories/:year/:month/:day/:title.html
 ---
-## 导言
+
 **Multiprocessing**与**concurrent.futures**都属于Python的内置模块，二者的功能是使得执行者能够并行地运行某一Python软件。
 
+<-more->
 ## Multiprocessing与Concurrent.futures功能简介
 接下来，将以“睡眠”小程序来展示多进程计算的功用。
 ``` python
