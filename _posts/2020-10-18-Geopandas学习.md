@@ -9,7 +9,7 @@ permalink: /:categories/:year/:month/:day/:title.html
 ---
 
 最近学习了Geopandas的一些基本理念和操作。此文章是为我的学习记录。Geopandas起源于Pandas，也同时整合了许多其他依赖包的功能。目前来看，Geopandas的功能能够初步满足我对数据分析的地理化呈现的基本要求。
-<-more->
+<!--more-->
 ## 基本功能与语法
 ### Geopandas的引入
 
